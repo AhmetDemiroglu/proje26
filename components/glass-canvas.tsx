@@ -105,11 +105,11 @@ void main() {
   col += vec3(1.0) * topGlow;
   a += topGlow * 0.8;
 
-  col += vec3(1.0) * (caustic * 0.14) + lime * (caustic * 0.1);
-  a += caustic * 0.14;
+  col += vec3(1.0) * (caustic * 0.1) + lime * (caustic * 0.07);
+  a += caustic * 0.1;
 
-  col += vec3(1.0) * (band * 0.17);
-  a += band * 0.14;
+  col += vec3(1.0) * (band * 0.12);
+  a += band * 0.1;
 
   col += vec3(1.0) * (rimLight * 1.1);
   a += rimLight * 0.95;
