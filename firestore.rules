@@ -1,0 +1,280 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAnonymous() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == "anonymous";
+    }
+
+    function validScore(score) {
+      return score is map
+        && score.keys().hasOnly(["rank", "placementScore"])
+        && score.rank is int
+        && score.rank >= 1
+        && score.rank <= 5000000
+        && score.placementScore is number
+        && score.placementScore >= 100
+        && score.placementScore <= 600;
+    }
+
+    function validScores(scores) {
+      return scores is map
+        && scores.keys().size() >= 1
+        && scores.keys().size() <= 5
+        && scores.keys().hasOnly(["TYT", "SAY", "EA", "SÖZ", "DİL"])
+        && (!("TYT" in scores) || validScore(scores.TYT))
+        && (!("SAY" in scores) || validScore(scores.SAY))
+        && (!("EA" in scores) || validScore(scores.EA))
+        && (!("SÖZ" in scores) || validScore(scores["SÖZ"]))
+        && (!("DİL" in scores) || validScore(scores["DİL"]));
+    }
+
+    function validNets(nets) {
+      return nets is map
+        && nets.keys().size() <= 16
+        && nets.keys().hasOnly([
+          "tytTurkce",
+          "tytSosyal",
+          "tytMatematik",
+          "tytFen",
+          "aytMatematik",
+          "aytFizik",
+          "aytKimya",
+          "aytBiyoloji",
+          "aytEdebiyat",
+          "aytTarih1",
+          "aytCografya1",
+          "aytTarih2",
+          "aytCografya2",
+          "aytFelsefe",
+          "aytDin",
+          "ydt"
+        ]);
+    }
+
+    function validInterest(interest) {
+      return interest is map
+        && interest.keys().hasOnly([
+          "degree",
+          "universityTypes",
+          "funding",
+          "cityCount",
+          "hasProgramQuery"
+        ])
+        && interest.degree in ["all", "lisans", "onlisans"]
+        && interest.universityTypes is list
+        && interest.universityTypes.size() <= 6
+        && interest.funding in ["all", "free", "scholarship"]
+        && interest.cityCount is int
+        && interest.cityCount >= 0
+        && interest.cityCount <= 81
+        && interest.hasProgramQuery is bool;
+    }
+
+    function validScholarshipPreferences(preferences) {
+      return preferences is map
+        && preferences.keys().hasOnly([
+          "degree",
+          "cities",
+          "universityTypes",
+          "funding",
+          "programQuery"
+        ])
+        && preferences.degree in ["all", "lisans", "onlisans"]
+        && preferences.cities is list
+        && preferences.cities.size() <= 10
+        && preferences.universityTypes is list
+        && preferences.universityTypes.size() <= 6
+        && preferences.funding in ["all", "free", "scholarship"]
+        && (preferences.programQuery == null
+          || (preferences.programQuery is string
+            && preferences.programQuery.size() <= 60));
+    }
+
+    function scholarshipCollectionEnabled() {
+      return get(
+        /databases/$(database)/documents/system_config/scholarship
+      ).data.enabled == true;
+    }
+
+    match /submissions/{submissionId} {
+      allow create: if isAnonymous()
+        && request.resource.data.keys().hasOnly([
+          "schemaVersion",
+          "examYear",
+          "scoreTypes",
+          "scores",
+          "nets",
+          "interest",
+          "consentVersion",
+          "source",
+          "createdAt"
+        ])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.examYear == 2026
+        && request.resource.data.scoreTypes is list
+        && request.resource.data.scoreTypes.size() >= 1
+        && request.resource.data.scoreTypes.size() <= 5
+        && request.resource.data.scoreTypes.hasOnly(["TYT", "SAY", "EA", "SÖZ", "DİL"])
+        && validScores(request.resource.data.scores)
+        && (!("nets" in request.resource.data) || validNets(request.resource.data.nets))
+        && validInterest(request.resource.data.interest)
+        && request.resource.data.consentVersion == "2026-1"
+        && request.resource.data.source == "web"
+        && request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    match /interest_events/{eventId} {
+      allow create: if isAnonymous()
+        && request.resource.data.keys().hasOnly([
+          "schemaVersion",
+          "examYear",
+          "programCode",
+          "scoreType",
+          "rankBand",
+          "matchBand",
+          "source",
+          "createdAt"
+        ])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.examYear == 2026
+        && request.resource.data.programCode is int
+        && request.resource.data.programCode >= 100000000
+        && request.resource.data.programCode <= 999999999
+        && request.resource.data.scoreType in ["TYT", "SAY", "EA", "SÖZ", "DİL"]
+        && request.resource.data.rankBand in [
+          "1-10K",
+          "10K-25K",
+          "25K-50K",
+          "50K-100K",
+          "100K-250K",
+          "250K-500K",
+          "500K+"
+        ]
+        && request.resource.data.matchBand in ["guclu", "dengeli", "sinir", "iddiali"]
+        && request.resource.data.source == "web"
+        && request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    match /donor_applications/{applicationId} {
+      allow create: if isAnonymous()
+        && request.resource.data.keys().hasOnly([
+          "schemaVersion",
+          "donorType",
+          "name",
+          "organizationName",
+          "email",
+          "supportTypes",
+          "estimatedStudents",
+          "note",
+          "status",
+          "consentVersion",
+          "source",
+          "createdAt"
+        ])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.donorType in ["individual", "organization"]
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 100
+        && (request.resource.data.organizationName == null
+          || (request.resource.data.organizationName is string
+            && request.resource.data.organizationName.size() >= 2
+            && request.resource.data.organizationName.size() <= 160))
+        && request.resource.data.email is string
+        && request.resource.data.email.size() >= 6
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.email.matches(
+          "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+        )
+        && request.resource.data.supportTypes is list
+        && request.resource.data.supportTypes.size() >= 1
+        && request.resource.data.supportTypes.size() <= 4
+        && request.resource.data.supportTypes.hasOnly([
+          "monthly",
+          "one_time",
+          "technology",
+          "mentorship"
+        ])
+        && request.resource.data.estimatedStudents is int
+        && request.resource.data.estimatedStudents >= 1
+        && request.resource.data.estimatedStudents <= 1000
+        && (request.resource.data.note == null
+          || (request.resource.data.note is string
+            && request.resource.data.note.size() <= 1000))
+        && request.resource.data.status == "pending_review"
+        && request.resource.data.consentVersion == "donor-2026-1"
+        && request.resource.data.source == "web"
+        && request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    match /scholarship_profiles/{profileId} {
+      allow create: if scholarshipCollectionEnabled()
+        && isAnonymous()
+        && profileId == request.auth.uid
+        && request.resource.data.keys().hasOnly([
+          "schemaVersion",
+          "examYear",
+          "name",
+          "email",
+          "ageGroup",
+          "scores",
+          "preferences",
+          "submissionId",
+          "status",
+          "contactShareMode",
+          "consentVersion",
+          "noticeVersion",
+          "source",
+          "createdAt"
+        ])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.examYear == 2026
+        && (request.resource.data.name == null
+          || (request.resource.data.name is string
+            && request.resource.data.name.size() >= 2
+            && request.resource.data.name.size() <= 60))
+        && request.resource.data.email is string
+        && request.resource.data.email.size() >= 6
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.email.matches(
+          "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+        )
+        && request.resource.data.ageGroup in ["adult", "minor"]
+        && validScores(request.resource.data.scores)
+        && validScholarshipPreferences(request.resource.data.preferences)
+        && (request.resource.data.submissionId == null
+          || (request.resource.data.submissionId is string
+            && request.resource.data.submissionId.size() <= 100))
+        && request.resource.data.status == "pending_email_verification"
+        && request.resource.data.contactShareMode == "student_approval_required"
+        && request.resource.data.consentVersion == "scholarship-2026-1"
+        && request.resource.data.noticeVersion == "scholarship-2026-1"
+        && request.resource.data.source == "web"
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if request.auth != null
+        && profileId == request.auth.uid
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == resource.data.email
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(["status", "verifiedAt"])
+        && resource.data.status == "pending_email_verification"
+        && request.resource.data.status == "active"
+        && request.resource.data.verifiedAt == request.time;
+
+      allow read, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "catalogueYear": 2026,
+  "placementYear": 2025,
+  "generatedAt": "2026-07-24T10:03:12.212Z",
+  "source": "https://yokatlas.yok.gov.tr/api/tercih-kilavuz/search",
+  "total": 21482,
+  "files": {
+    "TYT": {
+      "filename": "tyt.json",
+      "count": 9253,
+      "withPlacementRank": 7884
+    },
+    "SAY": {
+      "filename": "say.json",
+      "count": 5735,
+      "withPlacementRank": 4308
+    },
+    "EA": {
+      "filename": "ea.json",
+      "count": 3899,
+      "withPlacementRank": 3020
+    },
+    "SÖZ": {
+      "filename": "söz.json",
+      "count": 1914,
+      "withPlacementRank": 1520
+    },
+    "DİL": {
+      "filename": "dil.json",
+      "count": 679,
+      "withPlacementRank": 554
+    },
+    "SINIFLANDIRILMAMIS": {
+      "filename": "siniflandirilmamis.json",
+      "count": 2,
+      "withPlacementRank": 1
+    }
+  }
+}

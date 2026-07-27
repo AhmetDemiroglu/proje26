@@ -1,0 +1,50 @@
+{
+  "name": "tercihce",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:vercel": "next build",
+    "start": "next start",
+    "test": "vitest --config vitest.config.ts run tests/scoring.test.ts tests/data.test.ts tests/admin-statistics.test.ts tests/research-aggregate.test.ts tests/wizard.test.tsx tests/admin.test.tsx tests/donor-form.test.tsx",
+    "test:rules": "npx --yes firebase-tools@14.18.0 emulators:exec --project demo-tercihce --only auth,firestore \"vitest --config vitest.config.ts run tests/firestore-rules.test.ts\"",
+    "test:backend:e2e": "node scripts/test-backend-e2e.mjs",
+    "test:all": "npm run test && npm run test:rules && npm run test:backend:e2e && npm run lint && npm run build",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "data:sync": "node scripts/sync-yokatlas.mjs"
+  },
+  "dependencies": {
+    "firebase": "^12.16.0",
+    "firebase-admin": "^14.2.0",
+    "lucide-react": "^1.26.0",
+    "next": "16.2.11",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.1",
+    "@tailwindcss/postcss": "4.2.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.11",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "postcss": "8.5.22",
+    "sharp": "0.35.2",
+    "uuid": "11.1.1"
+  },
+  "type": "module"
+}
