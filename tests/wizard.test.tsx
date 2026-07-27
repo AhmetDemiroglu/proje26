@@ -86,9 +86,25 @@ describe("Tercihçe analiz akışı", () => {
     expect(
       screen.getByRole("heading", { name: "Bilgisayar Mühendisliği" }),
     ).toBeTruthy();
+  });
+
+  it("kayıt onayı istemeden kimliksiz kayıt bilgilendirmesi gösterir", async () => {
+    const user = userEvent.setup();
+    render(<TercihceApp />);
+
+    await user.type(screen.getByLabelText("SAY yerleştirme puanı"), "412,482");
+    await user.type(
+      screen.getByLabelText("SAY yerleştirme başarı sırası"),
+      "42680",
+    );
+    await user.click(
+      screen.getByRole("button", { name: /Tercihlerini ekle/i }),
+    );
+
+    expect(screen.getByText(/Analiz kimliksiz çalışır/i)).toBeTruthy();
     expect(
-      screen.getByText("Anonim araştırma kaydı oluşturulmadı."),
-    ).toBeTruthy();
+      screen.queryByRole("checkbox", { name: /araştırma için paylaş/i }),
+    ).toBeNull();
   });
 
   it("geçersiz puanı bir sonraki adıma geçmeden açıklar", async () => {

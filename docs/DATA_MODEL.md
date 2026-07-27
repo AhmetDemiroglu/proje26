@@ -2,29 +2,44 @@
 
 ## `submissions`
 
-Kimliksiz araştırma kaydıdır. İstemci yalnızca oluşturabilir, okuyamaz.
+Kimliksiz istatistik kaydıdır. Ayrı bir onay kutusuna bağlı değildir; aday puan
+ve sırasını girip ikinci adıma geçtiğinde oluşur ve ilerledikçe aynı belge
+güncellenir. Böylece yarıda bırakılan analizler de kayıtta kalır. İstemci
+oluşturabilir ve yalnızca kendi belgesini güncelleyebilir, okuyamaz.
 
 ```text
-schemaVersion: 1
+schemaVersion: 2
 examYear: 2026
+stage: "scores" | "preferences" | "analyzed"
 scoreTypes: ["SAY"]
 scores:
   SAY:
     rank: 42680
     placementScore: 412.482
 nets: opsiyonel test netleri
-interest:
+interest:                      # toplulaştırma için sinyaller
   degree: "lisans"
   universityTypes: ["DEVLET"]
   funding: "all"
   cityCount: 2
   hasProgramQuery: true
-consentVersion: "2026-1"
+preferences:                   # adayın girdiği tercihlerin tamamı
+  degree: "lisans"
+  cities: ["Ankara", "İzmir"]
+  universityTypes: ["DEVLET"]
+  funding: "all"
+  programQuery: "bilgisayar" veya null
+resultCount: 3901
+sessionUid: anonim oturum kimliği (güncelleme yetkisi için)
+noticeVersion: "2026-1"
 source: "web"
 createdAt: server timestamp
+updatedAt: güncelleme sonrası server timestamp
 ```
 
-Ad, e-posta, UID, IP ve sonuç belgesi bu koleksiyonda bulunmaz.
+Ad, e-posta, kimlik numarası, IP ve sonuç belgesi bu koleksiyonda bulunmaz.
+`sessionUid` yalnızca adayın kendi kaydını güncelleyebilmesi için tutulur;
+anonim Firebase oturumuna aittir ve kişiye bağlanamaz.
 
 ## `interest_events`
 

@@ -7,7 +7,7 @@ değerlendiren, 2026 program kataloğunu 2025 taban sıralamalarıyla karşıla�
 Uygulama üç ayrı veri alanı kullanır:
 
 1. Tarayıcıda çalışan tercih eşleştirme motoru
-2. Kullanıcı onaylarsa Firebase'e yazılan kimliksiz araştırma kayıtları
+2. Firebase'e yazılan, kimlik içermeyen anonim istatistik kayıtları
 3. Kullanıcı ayrıca açık rıza verirse oluşturulan özel erişimli burs profili
 
 ## Özellikler
@@ -17,7 +17,7 @@ Uygulama üç ayrı veri alanı kullanır:
 - Şehir, program, üniversite türü ve burs filtreleri
 - Güçlü, dengeli, sınırda ve iddialı seçenek grupları
 - 21.482 programlık güncel YÖK Atlas veri paketi
-- Kimliksiz araştırma kaydı için ayrı onay
+- Yarım kalan analizleri de kapsayan, kimlik içermeyen anonim istatistik kaydı
 - Ad ve e-posta içeren burs profili için ayrı aydınlatma ve açık rıza
 - Firebase e-posta bağlantısıyla burs profili doğrulama
 - IP saklamayan şehir ve yaklaşık tekil oturum analitiği
