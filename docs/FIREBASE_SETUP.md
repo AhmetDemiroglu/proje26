@@ -121,7 +121,7 @@ Gemini anahtarını `.env.local` içine ekle:
 
 ```text
 GEMINI_API_KEY=...
-GEMINI_MODEL=gemini-2.5-flash-lite
+GEMINI_MODEL=gemini-3.1-flash-lite
 ```
 
 Anahtarı `NEXT_PUBLIC_` ile başlayan bir değişkene yazma. Gemini isteği yalnızca

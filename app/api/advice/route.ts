@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+  const model = process.env.GEMINI_MODEL || "gemini-3.1-flash-lite";
   const prompt = [
     "Sen Tercihçe adlı ücretsiz YKS tercih rehberinin temkinli danışmanısın.",
     "Sadece verilen aday sırası ve 2025 taban sıralamalarını kullan.",
