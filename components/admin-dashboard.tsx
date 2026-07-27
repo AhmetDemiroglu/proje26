@@ -154,6 +154,19 @@ function scoreSummary(value: unknown) {
     .join(" · ");
 }
 
+const STAGE_LABELS: Record<string, string> = {
+  scores: "Yarım kaldı (puan)",
+  preferences: "Yarım kaldı (tercih)",
+  analyzed: "Analiz tamamlandı",
+};
+
+function netSummary(value: unknown) {
+  if (!value || typeof value !== "object") return "Net girilmedi";
+  const entries = Object.entries(value as Record<string, number>);
+  if (!entries.length) return "Net girilmedi";
+  return entries.map(([field, net]) => `${field}: ${net}`).join(" · ");
+}
+
 function csvCell(value: unknown) {
   let text =
     value && typeof value === "object"
@@ -1079,13 +1092,24 @@ function DataPanel({
                           <small>{String(row.email ?? "")}</small>
                         </td>
                       )}
-                      <td>{scoreSummary(row.scores)}</td>
+                      <td>
+                        {scoreSummary(row.scores)}
+                        {kind === "submissions" && (
+                          <small>{netSummary(row.nets)}</small>
+                        )}
+                      </td>
                       <td>
                         <small>
-                          {kind === "submissions"
-                            ? JSON.stringify(row.interest ?? {})
-                            : JSON.stringify(row.preferences ?? {})}
+                          {JSON.stringify(row.preferences ?? row.interest ?? {})}
                         </small>
+                        {kind === "submissions" && (
+                          <small>
+                            {STAGE_LABELS[String(row.stage)] ?? "Kaydedildi"}
+                            {typeof row.resultCount === "number"
+                              ? ` · ${formatNumber(row.resultCount)} sonuç`
+                              : ""}
+                          </small>
+                        )}
                       </td>
                       {kind === "scholarships" && (
                         <td>

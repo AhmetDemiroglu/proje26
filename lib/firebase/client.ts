@@ -120,33 +120,105 @@ function compactNets(nets: CandidateNets) {
   );
 }
 
-export async function saveAnonymousSubmission(input: {
+function interestSignals(preferences: CandidatePreferences) {
+  return {
+    degree: preferences.degree,
+    universityTypes: preferences.universityTypes,
+    funding: preferences.funding,
+    cityCount: preferences.cities.length,
+    hasProgramQuery: Boolean(preferences.programQuery.trim()),
+  };
+}
+
+function preferenceDetail(preferences: CandidatePreferences) {
+  const programQuery = preferences.programQuery.trim();
+  return {
+    degree: preferences.degree,
+    cities: preferences.cities,
+    universityTypes: preferences.universityTypes,
+    funding: preferences.funding,
+    programQuery: programQuery ? programQuery.slice(0, 60) : null,
+  };
+}
+
+/**
+ * Kimliksiz istatistik kaydını aday adım 1'i tamamlar tamamlamaz oluşturur.
+ * Aday süreci yarıda bırakırsa da bu kayıt elde kalır.
+ */
+export async function startAnonymousSubmission(input: {
   scores: CandidateScores;
   nets: CandidateNets;
-  preferences: CandidatePreferences;
 }) {
-  const { auth, db, appCheck } = getServices();
-  await ensureAnonymousSession(auth);
+  const { auth, db } = getServices();
+  const user = await ensureAnonymousSession(auth);
   const scoreTypes = Object.keys(input.scores) as ScoreType[];
   const nets = compactNets(input.nets);
 
   const result = await addDoc(collection(db, "submissions"), {
-    schemaVersion: 1,
+    schemaVersion: 2,
     examYear: 2026,
+    stage: "scores",
     scoreTypes,
     scores: input.scores,
     ...(Object.keys(nets).length ? { nets } : {}),
-    interest: {
-      degree: input.preferences.degree,
-      universityTypes: input.preferences.universityTypes,
-      funding: input.preferences.funding,
-      cityCount: input.preferences.cities.length,
-      hasProgramQuery: Boolean(input.preferences.programQuery.trim()),
-    },
-    consentVersion: "2026-1",
+    sessionUid: user.uid,
+    noticeVersion: "2026-1",
     source: "web",
     createdAt: serverTimestamp(),
   });
+  return result.id;
+}
+
+/**
+ * Aday ilerledikçe aynı belgeyi zenginleştirir. Kayıt yoksa yenisini oluşturur,
+ * böylece adım 1'deki yazma başarısız olmuşsa veri yine de toplanır.
+ */
+export async function updateAnonymousSubmission(input: {
+  submissionId: string | null;
+  scores: CandidateScores;
+  nets: CandidateNets;
+  preferences: CandidatePreferences;
+  stage: "preferences" | "analyzed";
+  resultCount?: number;
+}) {
+  const { auth, db } = getServices();
+  const user = await ensureAnonymousSession(auth);
+  const nets = compactNets(input.nets);
+  const payload = {
+    stage: input.stage,
+    scoreTypes: Object.keys(input.scores) as ScoreType[],
+    scores: input.scores,
+    ...(Object.keys(nets).length ? { nets } : {}),
+    interest: interestSignals(input.preferences),
+    preferences: preferenceDetail(input.preferences),
+    ...(typeof input.resultCount === "number"
+      ? { resultCount: input.resultCount }
+      : {}),
+  };
+
+  if (!input.submissionId) {
+    const created = await addDoc(collection(db, "submissions"), {
+      schemaVersion: 2,
+      examYear: 2026,
+      ...payload,
+      sessionUid: user.uid,
+      noticeVersion: "2026-1",
+      source: "web",
+      createdAt: serverTimestamp(),
+    });
+    return created.id;
+  }
+
+  await updateDoc(doc(db, "submissions", input.submissionId), {
+    ...payload,
+    updatedAt: serverTimestamp(),
+  });
+  return input.submissionId;
+}
+
+/** Toplulaştırma sunucu tarafında ve fire-and-forget çalışır. */
+export async function requestResearchAggregate(submissionId: string) {
+  const { appCheck } = getServices();
   try {
     const appCheckToken = appCheck
       ? (await getToken(appCheck, false)).token
@@ -157,13 +229,12 @@ export async function saveAnonymousSubmission(input: {
         "content-type": "application/json",
         ...(appCheckToken ? { "x-firebase-appcheck": appCheckToken } : {}),
       },
-      body: JSON.stringify({ submissionId: result.id }),
+      body: JSON.stringify({ submissionId }),
       keepalive: true,
     });
   } catch {
     // Kayıt Firestore'a yazılmıştır; toplulaştırma daha sonra yinelenebilir.
   }
-  return result.id;
 }
 
 export async function saveInterestEvent(input: {

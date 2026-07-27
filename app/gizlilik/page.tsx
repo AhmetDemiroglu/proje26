@@ -67,9 +67,10 @@ const SUMMARY = [
 
 const COLLECTED = [
   "2026 YKS yerleştirme puanı ve başarı sırası",
-  "Kullanıcı isterse sınav netleri",
-  "Program düzeyi, üniversite türü ve burs gibi genel ilgi sinyalleri",
-  "Kaydedilen programın kodu ve geniş başarı sırası aralığı",
+  "Girildiyse sınav netleri",
+  "Program düzeyi, şehir, üniversite türü ve burs tercihleri",
+  "Aranan program adı ve eşleşen program sayısı",
+  "Listeye eklenen programın kodu ve geniş başarı sırası aralığı",
 ];
 
 const NOT_COLLECTED = [
@@ -169,9 +170,9 @@ export default function PrivacyPage() {
                 </div>
               </header>
               <p>
-                Anonim araştırma kaydı oluştuğunda tutulan alanların tamamı
-                aşağıdadır. Sağ sütun, hiçbir aşamada istemediğimiz bilgileri
-                gösterir.
+                Analizi çalıştıran her ziyaretçi için anonim bir istatistik
+                kaydı tutulur. Bu kayıtta tutulan alanların tamamı aşağıdadır.
+                Sağ sütun, hiçbir aşamada istemediğimiz bilgileri gösterir.
               </p>
               <div className="doc-compare">
                 <div className="doc-compare-col is-yes">
@@ -217,14 +218,21 @@ export default function PrivacyPage() {
                 </div>
               </header>
               <p>
-                Sonuçlar yalnızca analiz formundaki anonim araştırma seçeneğini
-                kullanıcı işaretlediğinde kaydedilir. Bu seçenek işaretlenmeden
-                öneri motoru çalışır ve sonuç sunucuya yazılmaz.
+                İstatistik kaydı, puan ve başarı sırası girilip ikinci adıma
+                geçildiğinde oluşur; tercihler eklendikçe aynı kayıt güncellenir.
+                Analiz yarıda bırakılsa da o ana kadar girilen anonim veriler
+                kayıtta kalır. Bu kayıtlar tercih davranışını anlamak, hizmeti
+                geliştirmek ve toplu araştırma yapmak için kullanılır.
               </p>
               <p>
-                Burs profili için ayrı bir aydınlatma metni gösterilir ve ayrı
-                açık rıza alınır. E-posta doğrulanmadan burs profili aktif hale
-                gelmez.
+                Kayıt kimliksizdir: ad, e-posta, kimlik numarası, IP adresi veya
+                cihaz parmak izi içermez ve tek tek bir kişiye geri
+                bağlanamayacak biçimde tutulur.
+              </p>
+              <p>
+                Ad ve e-posta içeren burs profili bunun dışındadır. Onun için
+                ayrı bir aydınlatma metni gösterilir ve ayrı açık rıza alınır.
+                E-posta doğrulanmadan burs profili aktif hale gelmez.
               </p>
               <p className="doc-inline-link">
                 <Link href="/burs-aydinlatma">

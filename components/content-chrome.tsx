@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand";
+import { GlassCanvas } from "@/components/glass-canvas";
 import { HeaderFx } from "@/components/header-fx";
 
 const NAV_LINKS = [
@@ -14,6 +15,7 @@ export function ContentHeader({ current }: { current?: string }) {
   return (
     <header className="site-header content-header">
       <div className="site-header-inner">
+        <GlassCanvas />
         <Link className="brand" href="/" aria-label="Tercihçe ana sayfa">
           <BrandMark />
           <span>tercihçe</span>

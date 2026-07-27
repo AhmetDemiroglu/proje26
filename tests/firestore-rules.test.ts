@@ -45,8 +45,9 @@ describe("Firestore güvenlik kuralları", () => {
 
     await assertSucceeds(
       setDoc(doc(db, "submissions", "valid"), {
-        schemaVersion: 1,
+        schemaVersion: 2,
         examYear: 2026,
+        stage: "analyzed",
         scoreTypes: ["SAY"],
         scores,
         interest: {
@@ -56,10 +57,76 @@ describe("Firestore güvenlik kuralları", () => {
           cityCount: 1,
           hasProgramQuery: true,
         },
-        consentVersion: "2026-1",
+        preferences: {
+          degree: "lisans",
+          cities: ["Ankara"],
+          universityTypes: ["DEVLET"],
+          funding: "all",
+          programQuery: "bilgisayar",
+        },
+        resultCount: 120,
+        sessionUid: "anonymous-1",
+        noticeVersion: "2026-1",
         source: "web",
         createdAt: serverTimestamp(),
       }),
+    );
+  });
+
+  it("puan girilir girilmez oluşan yarım kaydı kabul eder", async () => {
+    const db = testEnv
+      .authenticatedContext("anonymous-partial", {
+        firebase: { sign_in_provider: "anonymous" },
+      })
+      .firestore();
+
+    await assertSucceeds(
+      setDoc(doc(db, "submissions", "partial"), {
+        schemaVersion: 2,
+        examYear: 2026,
+        stage: "scores",
+        scoreTypes: ["SAY"],
+        scores,
+        sessionUid: "anonymous-partial",
+        noticeVersion: "2026-1",
+        source: "web",
+        createdAt: serverTimestamp(),
+      }),
+    );
+  });
+
+  it("kaydı yalnızca oluşturan oturumun güncellemesine izin verir", async () => {
+    const ownerDb = testEnv
+      .authenticatedContext("anonymous-partial", {
+        firebase: { sign_in_provider: "anonymous" },
+      })
+      .firestore();
+    const strangerDb = testEnv
+      .authenticatedContext("anonymous-stranger", {
+        firebase: { sign_in_provider: "anonymous" },
+      })
+      .firestore();
+
+    const update = {
+      stage: "analyzed",
+      scoreTypes: ["SAY"],
+      scores,
+      preferences: {
+        degree: "all",
+        cities: [],
+        universityTypes: [],
+        funding: "all",
+        programQuery: null,
+      },
+      resultCount: 42,
+      updatedAt: serverTimestamp(),
+    };
+
+    await assertFails(
+      updateDoc(doc(strangerDb, "submissions", "partial"), update),
+    );
+    await assertSucceeds(
+      updateDoc(doc(ownerDb, "submissions", "partial"), update),
     );
   });
 
@@ -80,8 +147,9 @@ describe("Firestore güvenlik kuralları", () => {
       .firestore();
     await assertFails(
       setDoc(doc(db, "submissions", "with-email"), {
-        schemaVersion: 1,
+        schemaVersion: 2,
         examYear: 2026,
+        stage: "analyzed",
         scoreTypes: ["SAY"],
         scores,
         email: "ogrenci@example.com",
@@ -92,7 +160,8 @@ describe("Firestore güvenlik kuralları", () => {
           cityCount: 0,
           hasProgramQuery: false,
         },
-        consentVersion: "2026-1",
+        sessionUid: "anonymous-2",
+        noticeVersion: "2026-1",
         source: "web",
         createdAt: serverTimestamp(),
       }),

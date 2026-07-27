@@ -72,6 +72,10 @@ service cloud.firestore {
         && interest.hasProgramQuery is bool;
     }
 
+    function validResultCount(value) {
+      return value is int && value >= 0 && value <= 100000;
+    }
+
     function validScholarshipPreferences(preferences) {
       return preferences is map
         && preferences.keys().hasOnly([
@@ -99,32 +103,69 @@ service cloud.firestore {
     }
 
     match /submissions/{submissionId} {
+      // Kimliksiz istatistik kaydı. Aday adım 1'i tamamlar tamamlamaz oluşur,
+      // ilerledikçe aynı belge güncellenir. Ad, e-posta, IP ve belge içermez.
       allow create: if isAnonymous()
         && request.resource.data.keys().hasOnly([
           "schemaVersion",
           "examYear",
+          "stage",
           "scoreTypes",
           "scores",
           "nets",
           "interest",
-          "consentVersion",
+          "preferences",
+          "resultCount",
+          "sessionUid",
+          "noticeVersion",
           "source",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ])
-        && request.resource.data.schemaVersion == 1
+        && request.resource.data.schemaVersion == 2
         && request.resource.data.examYear == 2026
+        && request.resource.data.sessionUid == request.auth.uid
+        && request.resource.data.stage in ["scores", "preferences", "analyzed"]
         && request.resource.data.scoreTypes is list
         && request.resource.data.scoreTypes.size() >= 1
         && request.resource.data.scoreTypes.size() <= 5
         && request.resource.data.scoreTypes.hasOnly(["TYT", "SAY", "EA", "SÖZ", "DİL"])
         && validScores(request.resource.data.scores)
         && (!("nets" in request.resource.data) || validNets(request.resource.data.nets))
-        && validInterest(request.resource.data.interest)
-        && request.resource.data.consentVersion == "2026-1"
+        && (!("interest" in request.resource.data) || validInterest(request.resource.data.interest))
+        && (!("preferences" in request.resource.data)
+          || validScholarshipPreferences(request.resource.data.preferences))
+        && (!("resultCount" in request.resource.data)
+          || validResultCount(request.resource.data.resultCount))
+        && request.resource.data.noticeVersion == "2026-1"
         && request.resource.data.source == "web"
         && request.resource.data.createdAt == request.time;
 
-      allow read, update, delete: if false;
+      // Yalnızca kaydı oluşturan anonim oturum, yalnızca ilerleme alanlarını
+      // güncelleyebilir. Kimlik, kaynak ve oluşturma zamanı dokunulamaz.
+      allow update: if isAnonymous()
+        && resource.data.sessionUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "stage",
+          "scoreTypes",
+          "scores",
+          "nets",
+          "interest",
+          "preferences",
+          "resultCount",
+          "updatedAt"
+        ])
+        && request.resource.data.stage in ["scores", "preferences", "analyzed"]
+        && validScores(request.resource.data.scores)
+        && (!("nets" in request.resource.data) || validNets(request.resource.data.nets))
+        && (!("interest" in request.resource.data) || validInterest(request.resource.data.interest))
+        && (!("preferences" in request.resource.data)
+          || validScholarshipPreferences(request.resource.data.preferences))
+        && (!("resultCount" in request.resource.data)
+          || validResultCount(request.resource.data.resultCount))
+        && request.resource.data.updatedAt == request.time;
+
+      allow read, delete: if false;
     }
 
     match /interest_events/{eventId} {

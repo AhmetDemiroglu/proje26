@@ -138,6 +138,35 @@ select:focus-visible {
   opacity: 1;
 }
 
+/* WebGL cam katmanı: kapsül arka planının üstünde, içeriğin altında. */
+.glass-canvas {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
+.site-header.is-scrolled .glass-canvas {
+  opacity: 1;
+}
+
+/* Cam katmanı içeriğin altında kalsın; odak halkaları kırpılmasın. */
+.site-header-inner > :not(.glass-canvas) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-canvas {
+    display: none;
+  }
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -1371,6 +1400,27 @@ select:focus-visible {
   background: #fafaf6;
   cursor: pointer;
   gap: 12px;
+}
+
+.consent-note {
+  margin-top: 34px;
+  padding: 15px 17px;
+  border: 1px solid #d8dfda;
+  border-radius: 15px;
+  background: #fafaf6;
+  color: #5c6660;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.consent-note strong {
+  color: #1f2a24;
+}
+
+.consent-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .consent-card > input {

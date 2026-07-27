@@ -27,8 +27,9 @@ import {
   UserRoundX,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BrandMark } from "@/components/brand";
+import { GlassCanvas } from "@/components/glass-canvas";
 import { HeaderFx } from "@/components/header-fx";
 import {
   formatRank,
@@ -245,6 +246,7 @@ function Hero() {
     <>
       <header className="site-header">
         <div className="site-header-inner">
+          <GlassCanvas />
           <a className="brand" href="#top" aria-label="Tercihçe ana sayfa">
             <BrandMark />
             <span>tercihçe</span>
@@ -782,8 +784,6 @@ function PreferenceInputs({
   onBack,
   onAnalyze,
   loading,
-  consent,
-  setConsent,
   error,
 }: {
   preferences: CandidatePreferences;
@@ -791,8 +791,6 @@ function PreferenceInputs({
   onBack: () => void;
   onAnalyze: () => void;
   loading: boolean;
-  consent: boolean;
-  setConsent: (value: boolean) => void;
   error: string;
 }) {
   const [cityValue, setCityValue] = useState("");
@@ -963,22 +961,12 @@ function PreferenceInputs({
         </div>
       </fieldset>
 
-      <label className="consent-card">
-        <input
-          type="checkbox"
-          checked={consent}
-          onChange={(event) => setConsent(event.target.checked)}
-        />
-        <span className="custom-checkbox">{consent && <Check size={15} />}</span>
-        <span>
-          <strong>Anonim sonucumu araştırma için paylaş</strong>
-          <small>
-            İsim, kimlik, e-posta ve belge olmadan yalnızca puan, sıra ve genel
-            ilgi sinyalleri toplu istatistik için kaydedilir. Seçmezsen analiz
-            yine çalışır.
-          </small>
-        </span>
-      </label>
+      <p className="consent-note">
+        <strong>Analiz kimliksiz çalışır.</strong> Girdiğin puan, sıra ve tercih
+        bilgileri isim, e-posta, kimlik numarası veya IP adresi olmadan anonim
+        istatistik havuzuna eklenir.{" "}
+        <a href="/gizlilik">Gizlilik ve veri kullanımı</a>
+      </p>
 
       {error && <p className="form-error">{error}</p>}
       <div className="wizard-actions">
@@ -1074,7 +1062,6 @@ function Results({
   scores,
   matches,
   selectedTypes,
-  consent,
   saveStatus,
   onRestart,
 }: {
@@ -1082,7 +1069,6 @@ function Results({
   scores: CandidateScores;
   matches: ProgramMatch[];
   selectedTypes: ScoreType[];
-  consent: boolean;
   saveStatus: string;
   onRestart: () => void;
 }) {
@@ -1108,7 +1094,7 @@ function Results({
         ? savedCodes.filter((code) => code !== match.code)
         : [...savedCodes, match.code],
     );
-    if (!exists && consent && firebaseIsConfigured()) {
+    if (!exists && firebaseIsConfigured()) {
       void import("../lib/firebase/client")
         .then(({ saveInterestEvent }) =>
           saveInterestEvent({
@@ -1343,7 +1329,7 @@ function Analyzer() {
   const [nets, setNets] = useState<CandidateNets>({});
   const [preferences, setPreferences] =
     useState<CandidatePreferences>(DEFAULT_PREFERENCES);
-  const [consent, setConsent] = useState(false);
+  const submissionIdRef = useRef<string | null>(null);
   const [matches, setMatches] = useState<ProgramMatch[]>([]);
   const [candidateScores, setCandidateScores] = useState<CandidateScores>({});
   const [loading, setLoading] = useState(false);
@@ -1415,6 +1401,21 @@ function Analyzer() {
     setError("");
     setStep(2);
     void trackEvent("analyzer_started");
+
+    // Kimliksiz istatistik kaydı burada oluşur. Aday süreci yarıda bıraksa
+    // bile puan ve sıra verisi araştırma havuzunda kalır.
+    if (!firebaseIsConfigured()) return;
+    const scores = buildCandidateScores(selectedTypes, scoreInputs);
+    void import("../lib/firebase/client")
+      .then(({ startAnonymousSubmission }) =>
+        startAnonymousSubmission({ scores, nets }),
+      )
+      .then((id) => {
+        submissionIdRef.current = id;
+      })
+      .catch(() => {
+        submissionIdRef.current = null;
+      });
   }
 
   async function analyze() {
@@ -1448,32 +1449,27 @@ function Analyzer() {
       let submissionId: string | null = null;
       const statusMessages: string[] = [];
 
-      if (consent) {
-        if (firebaseIsConfigured()) {
-          try {
-            const { saveAnonymousSubmission } = await import(
-              "../lib/firebase/client"
-            );
-            submissionId = await saveAnonymousSubmission({
-              scores,
-              nets,
-              preferences,
-            });
-            statusMessages.push(
-              "Anonim sonucun araştırma havuzuna güvenli biçimde kaydedildi.",
-            );
-          } catch {
-            statusMessages.push(
-              "Analiz tamamlandı, ancak anonim kayıt şu anda yapılamadı.",
-            );
-          }
-        } else {
-          statusMessages.push(
-            "Analiz yerel modda çalıştı. Firebase bağlanana kadar sonuç sunucuya kaydedilmez.",
-          );
+      if (firebaseIsConfigured()) {
+        try {
+          const { updateAnonymousSubmission, requestResearchAggregate } =
+            await import("../lib/firebase/client");
+          submissionId = await updateAnonymousSubmission({
+            submissionId: submissionIdRef.current,
+            scores,
+            nets,
+            preferences,
+            stage: "analyzed",
+            resultCount: allMatches.length,
+          });
+          submissionIdRef.current = submissionId;
+          void requestResearchAggregate(submissionId);
+        } catch {
+          // İstatistik kaydı adayın analizini etkilemez.
         }
       } else {
-        statusMessages.push("Anonim araştırma kaydı oluşturulmadı.");
+        statusMessages.push(
+          "Analiz yerel modda çalıştı. Firebase bağlanana kadar sonuç sunucuya kaydedilmez.",
+        );
       }
 
       if (
@@ -1559,8 +1555,6 @@ function Analyzer() {
               }}
               onAnalyze={analyze}
               loading={loading}
-              consent={consent}
-              setConsent={setConsent}
               error={error}
             />
           )}
@@ -1570,7 +1564,6 @@ function Analyzer() {
               scores={candidateScores}
               matches={matches}
               selectedTypes={selectedTypes}
-              consent={consent}
               saveStatus={saveStatus}
               onRestart={() => {
                 setError("");
