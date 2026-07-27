@@ -132,7 +132,6 @@ select:focus-visible {
 
 .glass-base,
 .glass-refract,
-.glass-edge,
 .glass-shine {
   position: absolute;
   inset: 0;
@@ -149,8 +148,7 @@ select:focus-visible {
   backdrop-filter: blur(20px) saturate(1.6);
 }
 
-.glass-refract,
-.glass-edge {
+.glass-refract {
   display: none;
 }
 
@@ -160,25 +158,17 @@ select:focus-visible {
   .glass-base {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.46),
-      rgba(250, 247, 238, 0.3)
+      rgba(255, 255, 255, 0.42),
+      rgba(250, 247, 238, 0.26)
     );
-    backdrop-filter: blur(5px) saturate(1.6);
+    backdrop-filter: blur(3px) saturate(1.6);
   }
 
+  /* Pürüzsüz mercek: merkez düz, bükülme kapsül kenarında (GlassCanvas'ın
+     ürettiği SDF haritası). Gürültü yok — dalgalanma yok. */
   .glass-refract {
     display: block;
-    backdrop-filter: url(#glass-lens) brightness(1.05) contrast(1.02);
-  }
-
-  /* Kapsül çeperi: kalın cam kenarının sert mercek bükmesi. Maske katmanları
-     varsayılan "add" ile birleşir → yalnız kenar çerçevesi görünür. */
-  .glass-edge {
-    display: block;
-    backdrop-filter: url(#glass-lens-edge) brightness(1.07) saturate(1.35);
-    mask-image:
-      linear-gradient(to right, #000, transparent 15%, transparent 85%, #000),
-      linear-gradient(to bottom, #000, transparent 40%, transparent 60%, #000);
+    backdrop-filter: url(#glass-lens) brightness(1.03);
   }
 }
 
@@ -218,8 +208,7 @@ select:focus-visible {
     backdrop-filter: none;
   }
 
-  .glass-refract,
-  .glass-edge {
+  .glass-refract {
     display: none !important;
   }
 }
