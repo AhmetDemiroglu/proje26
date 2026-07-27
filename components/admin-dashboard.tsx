@@ -1332,29 +1332,29 @@ function DataPanel({
                           ? scoreEntries(row.scores)
                               .map(([type]) => type)
                               .join(", ")
-                          : "—"}
+                          : "yok"}
                       </td>
                       <td className="is-numeric">
                         {scoreEntries(row.scores).length
                           ? scoreEntries(row.scores)
                               .map(([, score]) => formatNumber(score.rank))
                               .join(" / ")
-                          : "—"}
+                          : "yok"}
                       </td>
                       <td className="is-numeric">
                         {scoreEntries(row.scores).length
                           ? scoreEntries(row.scores)
                               .map(([, score]) =>
-                                String(score.placementScore ?? "—"),
+                                String(score.placementScore ?? "yok"),
                               )
                               .join(" / ")
-                          : "—"}
+                          : "yok"}
                       </td>
                       {kind === "submissions" && (
                         <td className="is-numeric">
                           {netEntries(row.nets).length
                             ? `${netEntries(row.nets).length} ders`
-                            : "—"}
+                            : "yok"}
                         </td>
                       )}
                       <td className="is-wide">{preferenceSummary(row)}</td>
@@ -1363,7 +1363,7 @@ function DataPanel({
                           <td className="is-numeric">
                             {typeof row.resultCount === "number"
                               ? formatNumber(row.resultCount)
-                              : "—"}
+                              : "yok"}
                           </td>
                           <td>
                             <span
