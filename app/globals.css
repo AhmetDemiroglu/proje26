@@ -147,7 +147,6 @@ select:focus-visible {
     rgba(250, 247, 238, 0.36)
   );
   backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
 }
 
 .glass-refract,
@@ -161,11 +160,10 @@ select:focus-visible {
   .glass-base {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.44),
-      rgba(250, 247, 238, 0.28)
+      rgba(255, 255, 255, 0.46),
+      rgba(250, 247, 238, 0.3)
     );
-    backdrop-filter: blur(2.5px) saturate(1.55);
-    -webkit-backdrop-filter: blur(2.5px) saturate(1.55);
+    backdrop-filter: blur(5px) saturate(1.6);
   }
 
   .glass-refract {
@@ -179,9 +177,6 @@ select:focus-visible {
     display: block;
     backdrop-filter: url(#glass-lens-edge) brightness(1.07) saturate(1.35);
     mask-image:
-      linear-gradient(to right, #000, transparent 15%, transparent 85%, #000),
-      linear-gradient(to bottom, #000, transparent 40%, transparent 60%, #000);
-    -webkit-mask-image:
       linear-gradient(to right, #000, transparent 15%, transparent 85%, #000),
       linear-gradient(to bottom, #000, transparent 40%, transparent 60%, #000);
   }
@@ -221,7 +216,6 @@ select:focus-visible {
   .glass-base {
     background: rgba(255, 253, 248, 0.97);
     backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 
   .glass-refract,
@@ -2262,7 +2256,6 @@ select:focus-visible {
     border-radius: 18px;
     background: rgba(255, 253, 248, 0.94);
     backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
     box-shadow: 0 24px 60px -20px rgba(19, 38, 31, 0.32);
     animation: mobile-nav-in 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
@@ -2862,18 +2855,29 @@ textarea:focus-visible {
 
 .admin-toolbar select,
 .admin-toolbar input {
-  min-width: 132px;
-  height: 40px;
-  padding: 0 32px 0 11px;
+  width: 100%;
+  min-width: 0;
+  max-width: 150px;
+  height: 34px;
+  padding: 0 10px;
   border: 1px solid var(--line);
-  border-radius: 11px;
+  border-radius: 9px;
   background: var(--paper);
   color: var(--ink);
   font-size: 12px;
 }
 
 .admin-toolbar .admin-search-field {
-  flex: 1 1 210px;
+  flex: 1 1 200px;
+  max-width: 300px;
+}
+
+.admin-toolbar .admin-search-field input {
+  max-width: none;
+}
+
+.admin-toolbar .secondary-button {
+  min-height: 34px;
 }
 
 .admin-toolbar .admin-search-field input {
@@ -3203,27 +3207,135 @@ textarea:focus-visible {
   overflow-x: auto;
 }
 
+/* Yönetim panelindeki veri kartı. Ana sayfadaki .data-card ile karışmaması
+   için ayrı bir ad kullanılır; o sınıf iki sütunlu koyu bir bölüm. */
+.admin-data-card {
+  display: block;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 
 .admin-table th {
-  padding: 11px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--line);
+  background: var(--paper);
   color: var(--ink-soft);
-  font-size: 9px;
+  font-size: 9.5px;
   letter-spacing: 0.06em;
   text-align: left;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .admin-table td {
-  max-width: 330px;
-  padding: 13px 12px;
+  padding: 11px 12px;
   border-bottom: 1px solid #edf0ea;
-  vertical-align: top;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.admin-table tbody tr:hover td {
+  background: #fbfcfa;
+}
+
+.admin-table th.is-numeric,
+.admin-table td.is-numeric {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.admin-table td.is-wide {
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stage-pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #eef1ec;
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.stage-pill.stage-analyzed {
+  background: #e6f3e2;
+  color: #35603a;
+}
+
+.detail-toggle {
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 750;
+}
+
+.detail-toggle:hover {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+}
+
+.detail-row > td {
+  padding: 0;
+  background: #fafbf8;
+  white-space: normal;
+}
+
+.record-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  padding: 18px 12px 22px;
+  gap: 22px;
+}
+
+.record-detail h4 {
+  margin: 0 0 9px;
+  color: var(--ink-soft);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.detail-field {
+  display: grid;
+  grid-template-columns: minmax(88px, auto) 1fr;
+  padding: 4px 0;
+  gap: 10px;
+}
+
+.detail-label {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.detail-value {
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+}
+
+.detail-value code {
+  font-size: 10.5px;
+}
+
+.detail-empty {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 11px;
 }
 
 .admin-table td strong,

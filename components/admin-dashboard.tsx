@@ -24,7 +24,14 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -147,25 +154,108 @@ function formatDate(value: unknown) {
   }).format(new Date(value));
 }
 
-function scoreSummary(value: unknown) {
-  if (!value || typeof value !== "object") return "Puan yok";
-  return Object.entries(value as Record<string, { rank?: number }>)
-    .map(([type, score]) => `${type} ${formatNumber(score.rank)}`)
-    .join(" · ");
-}
-
 const STAGE_LABELS: Record<string, string> = {
-  scores: "Yarım kaldı (puan)",
-  preferences: "Yarım kaldı (tercih)",
+  scores: "Puan girildi",
+  preferences: "Tercih girildi",
   analyzed: "Analiz tamamlandı",
 };
 
-function netSummary(value: unknown) {
-  if (!value || typeof value !== "object") return "Net girilmedi";
-  const entries = Object.entries(value as Record<string, number>);
-  if (!entries.length) return "Net girilmedi";
-  return entries.map(([field, net]) => `${field}: ${net}`).join(" · ");
+const NET_LABELS: Record<string, string> = {
+  tytTurkce: "TYT Türkçe",
+  tytSosyal: "TYT Sosyal",
+  tytMatematik: "TYT Matematik",
+  tytFen: "TYT Fen",
+  aytMatematik: "AYT Matematik",
+  aytFizik: "AYT Fizik",
+  aytKimya: "AYT Kimya",
+  aytBiyoloji: "AYT Biyoloji",
+  aytEdebiyat: "AYT Edebiyat",
+  aytTarih1: "AYT Tarih-1",
+  aytCografya1: "AYT Coğrafya-1",
+  aytTarih2: "AYT Tarih-2",
+  aytCografya2: "AYT Coğrafya-2",
+  aytFelsefe: "AYT Felsefe",
+  aytDin: "AYT Din Kültürü",
+  ydt: "YDT",
+};
+
+const DEGREE_LABELS: Record<string, string> = {
+  all: "Fark etmez",
+  lisans: "Lisans",
+  onlisans: "Önlisans",
+};
+
+const FUNDING_LABELS: Record<string, string> = {
+  all: "Fark etmez",
+  free: "Ücretsiz / tam burslu",
+  scholarship: "Yalnızca tam burslu",
+};
+
+type ScoreEntry = { rank?: number; placementScore?: number };
+
+function scoreEntries(value: unknown): Array<[string, ScoreEntry]> {
+  if (!value || typeof value !== "object") return [];
+  return Object.entries(value as Record<string, ScoreEntry>);
 }
+
+function netEntries(value: unknown): Array<[string, number]> {
+  if (!value || typeof value !== "object") return [];
+  return Object.entries(value as Record<string, number>).filter(([, net]) =>
+    Number.isFinite(Number(net)),
+  );
+}
+
+function preferenceRecord(row: JsonRecord) {
+  const source = (row.preferences ?? row.interest ?? {}) as Record<
+    string,
+    unknown
+  >;
+  return typeof source === "object" && source ? source : {};
+}
+
+function preferenceSummary(row: JsonRecord) {
+  const p = preferenceRecord(row);
+  const parts: string[] = [];
+  if (typeof p.degree === "string") {
+    parts.push(DEGREE_LABELS[p.degree] ?? p.degree);
+  }
+  const cities = Array.isArray(p.cities) ? (p.cities as string[]) : null;
+  if (cities?.length) parts.push(cities.join(", "));
+  else if (typeof p.cityCount === "number" && p.cityCount > 0) {
+    parts.push(`${p.cityCount} şehir`);
+  }
+  const types = Array.isArray(p.universityTypes)
+    ? (p.universityTypes as string[])
+    : [];
+  if (types.length) parts.push(types.join(", "));
+  if (typeof p.funding === "string" && p.funding !== "all") {
+    parts.push(FUNDING_LABELS[p.funding] ?? p.funding);
+  }
+  if (typeof p.programQuery === "string" && p.programQuery) {
+    parts.push(`"${p.programQuery}"`);
+  }
+  return parts.length ? parts.join(" · ") : "Filtre yok";
+}
+
+/** Belgede bilinen alanlar dışında kalan her şey. Şema büyürse de görünür. */
+const KNOWN_FIELDS = new Set([
+  "id",
+  "schemaVersion",
+  "examYear",
+  "stage",
+  "scoreTypes",
+  "scores",
+  "nets",
+  "interest",
+  "preferences",
+  "resultCount",
+  "sessionUid",
+  "noticeVersion",
+  "consentVersion",
+  "source",
+  "createdAt",
+  "updatedAt",
+]);
 
 function csvCell(value: unknown) {
   let text =
@@ -853,6 +943,137 @@ function OverviewPanel({
   );
 }
 
+function DetailField({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="detail-field">
+      <span className="detail-label">{label}</span>
+      <span className="detail-value">{children}</span>
+    </div>
+  );
+}
+
+function RecordDetail({ row }: { row: JsonRecord }) {
+  const scores = scoreEntries(row.scores);
+  const nets = netEntries(row.nets);
+  const preferences = preferenceRecord(row);
+  const extras = Object.entries(row).filter(
+    ([key]) => !KNOWN_FIELDS.has(key) && !["name", "email", "status"].includes(key),
+  );
+  const cities = Array.isArray(preferences.cities)
+    ? (preferences.cities as string[])
+    : [];
+  const universityTypes = Array.isArray(preferences.universityTypes)
+    ? (preferences.universityTypes as string[])
+    : [];
+
+  return (
+    <div className="record-detail">
+      <div className="detail-block">
+        <h4>Kayıt</h4>
+        <DetailField label="Belge kimliği">
+          <code>{String(row.id)}</code>
+        </DetailField>
+        <DetailField label="Oluşturma">{formatDate(row.createdAt)}</DetailField>
+        <DetailField label="Son güncelleme">
+          {row.updatedAt ? formatDate(row.updatedAt) : "Güncellenmedi"}
+        </DetailField>
+        {row.stage !== undefined && (
+          <DetailField label="Aşama">
+            {STAGE_LABELS[String(row.stage)] ?? String(row.stage)}
+          </DetailField>
+        )}
+        {row.resultCount !== undefined && (
+          <DetailField label="Eşleşen program">
+            {formatNumber(row.resultCount)}
+          </DetailField>
+        )}
+        {row.examYear !== undefined && (
+          <DetailField label="Sınav yılı">{String(row.examYear)}</DetailField>
+        )}
+        {row.source !== undefined && (
+          <DetailField label="Kaynak">{String(row.source)}</DetailField>
+        )}
+      </div>
+
+      <div className="detail-block">
+        <h4>Puanlar</h4>
+        {scores.length ? (
+          scores.map(([type, score]) => (
+            <DetailField key={type} label={type}>
+              Sıra <strong>{formatNumber(score.rank)}</strong> · Puan{" "}
+              <strong>{String(score.placementScore ?? "-")}</strong>
+            </DetailField>
+          ))
+        ) : (
+          <p className="detail-empty">Puan kaydı yok.</p>
+        )}
+      </div>
+
+      <div className="detail-block">
+        <h4>Netler</h4>
+        {nets.length ? (
+          nets.map(([field, net]) => (
+            <DetailField key={field} label={NET_LABELS[field] ?? field}>
+              {String(net)}
+            </DetailField>
+          ))
+        ) : (
+          <p className="detail-empty">Net girilmedi.</p>
+        )}
+      </div>
+
+      <div className="detail-block">
+        <h4>Tercihler</h4>
+        <DetailField label="Program düzeyi">
+          {DEGREE_LABELS[String(preferences.degree)] ??
+            String(preferences.degree ?? "-")}
+        </DetailField>
+        <DetailField label="Şehirler">
+          {cities.length
+            ? cities.join(", ")
+            : typeof preferences.cityCount === "number"
+              ? `${preferences.cityCount} şehir`
+              : "Seçilmedi"}
+        </DetailField>
+        <DetailField label="Üniversite türü">
+          {universityTypes.length ? universityTypes.join(", ") : "Fark etmez"}
+        </DetailField>
+        <DetailField label="Burs durumu">
+          {FUNDING_LABELS[String(preferences.funding)] ??
+            String(preferences.funding ?? "-")}
+        </DetailField>
+        <DetailField label="Program araması">
+          {typeof preferences.programQuery === "string" &&
+          preferences.programQuery
+            ? preferences.programQuery
+            : preferences.hasProgramQuery
+              ? "Arama yapıldı"
+              : "Yok"}
+        </DetailField>
+      </div>
+
+      {extras.length > 0 && (
+        <div className="detail-block">
+          <h4>Diğer alanlar</h4>
+          {extras.map(([key, value]) => (
+            <DetailField key={key} label={key}>
+              {typeof value === "object" && value !== null
+                ? JSON.stringify(value)
+                : String(value)}
+            </DetailField>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DataPanel({
   kind,
   rows,
@@ -877,6 +1098,7 @@ function DataPanel({
   const [query, setQuery] = useState("");
   const [minRank, setMinRank] = useState("");
   const [maxRank, setMaxRank] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const visibleRows = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase("tr-TR");
     const minimum = Number(minRank) || 0;
@@ -900,7 +1122,7 @@ function DataPanel({
   }, [kind, maxRank, minRank, query, rows]);
 
   return (
-    <section className="admin-card data-card">
+    <section className="admin-card admin-data-card">
       <div className="admin-toolbar">
         <label className="admin-search-field">
           Ara
@@ -1017,16 +1239,29 @@ function DataPanel({
                 ) : (
                   <>
                     {kind === "scholarships" && <th>Aday</th>}
-                    <th>Sıralamalar</th>
-                    <th>Tercih özeti</th>
+                    <th>Puan türü</th>
+                    <th className="is-numeric">Başarı sırası</th>
+                    <th className="is-numeric">Yerleştirme puanı</th>
+                    {kind === "submissions" && (
+                      <th className="is-numeric">Net</th>
+                    )}
+                    <th>Tercihler</th>
+                    {kind === "submissions" && (
+                      <>
+                        <th className="is-numeric">Sonuç</th>
+                        <th>Aşama</th>
+                      </>
+                    )}
                     {kind === "scholarships" && <th>Durum</th>}
+                    <th aria-label="Detay" />
                   </>
                 )}
               </tr>
             </thead>
             <tbody>
               {visibleRows.map((row) => (
-                <tr key={String(row.id)}>
+                <Fragment key={String(row.id)}>
+                <tr>
                   <td>
                     <small>{formatDate(row.createdAt)}</small>
                   </td>
@@ -1093,24 +1328,52 @@ function DataPanel({
                         </td>
                       )}
                       <td>
-                        {scoreSummary(row.scores)}
-                        {kind === "submissions" && (
-                          <small>{netSummary(row.nets)}</small>
-                        )}
+                        {scoreEntries(row.scores).length
+                          ? scoreEntries(row.scores)
+                              .map(([type]) => type)
+                              .join(", ")
+                          : "—"}
                       </td>
-                      <td>
-                        <small>
-                          {JSON.stringify(row.preferences ?? row.interest ?? {})}
-                        </small>
-                        {kind === "submissions" && (
-                          <small>
-                            {STAGE_LABELS[String(row.stage)] ?? "Kaydedildi"}
+                      <td className="is-numeric">
+                        {scoreEntries(row.scores).length
+                          ? scoreEntries(row.scores)
+                              .map(([, score]) => formatNumber(score.rank))
+                              .join(" / ")
+                          : "—"}
+                      </td>
+                      <td className="is-numeric">
+                        {scoreEntries(row.scores).length
+                          ? scoreEntries(row.scores)
+                              .map(([, score]) =>
+                                String(score.placementScore ?? "—"),
+                              )
+                              .join(" / ")
+                          : "—"}
+                      </td>
+                      {kind === "submissions" && (
+                        <td className="is-numeric">
+                          {netEntries(row.nets).length
+                            ? `${netEntries(row.nets).length} ders`
+                            : "—"}
+                        </td>
+                      )}
+                      <td className="is-wide">{preferenceSummary(row)}</td>
+                      {kind === "submissions" && (
+                        <>
+                          <td className="is-numeric">
                             {typeof row.resultCount === "number"
-                              ? ` · ${formatNumber(row.resultCount)} sonuç`
-                              : ""}
-                          </small>
-                        )}
-                      </td>
+                              ? formatNumber(row.resultCount)
+                              : "—"}
+                          </td>
+                          <td>
+                            <span
+                              className={`stage-pill stage-${String(row.stage ?? "analyzed")}`}
+                            >
+                              {STAGE_LABELS[String(row.stage)] ?? "Kaydedildi"}
+                            </span>
+                          </td>
+                        </>
+                      )}
                       {kind === "scholarships" && (
                         <td>
                           <span className={`status-pill ${String(row.status)}`}>
@@ -1118,9 +1381,33 @@ function DataPanel({
                           </span>
                         </td>
                       )}
+                      <td>
+                        <button
+                          type="button"
+                          className="detail-toggle"
+                          aria-expanded={expandedId === String(row.id)}
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === String(row.id)
+                                ? null
+                                : String(row.id),
+                            )
+                          }
+                        >
+                          {expandedId === String(row.id) ? "Kapat" : "Detay"}
+                        </button>
+                      </td>
                     </>
                   )}
                 </tr>
+                {kind !== "donors" && expandedId === String(row.id) && (
+                  <tr className="detail-row">
+                    <td colSpan={kind === "submissions" ? 9 : 8}>
+                      <RecordDetail row={row} />
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               ))}
             </tbody>
           </table>
@@ -1156,7 +1443,7 @@ function AuditPanel({
   }, [query, rows]);
 
   return (
-    <section className="admin-card data-card">
+    <section className="admin-card admin-data-card">
       <div className="admin-toolbar">
         <label className="admin-search-field">
           Ara
