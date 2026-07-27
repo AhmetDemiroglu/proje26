@@ -44,9 +44,8 @@ const PROCESSED = [
 export default function ScholarshipNoticePage() {
   const controllerName =
     process.env.DATA_CONTROLLER_NAME || "Tercihçe proje yürütücüsü";
-  const controllerEmail = process.env.DATA_CONTROLLER_EMAIL;
-  const isDraft =
-    !process.env.DATA_CONTROLLER_NAME || !process.env.DATA_CONTROLLER_EMAIL;
+  const controllerEmail = process.env.DATA_CONTROLLER_EMAIL || "info@tercihce.com";
+  const isDraft = !process.env.DATA_CONTROLLER_NAME;
 
   return (
     <>
@@ -114,9 +113,9 @@ export default function ScholarshipNoticePage() {
                   </div>
                 </header>
                 <p>
-                  Veri sorumlusunun gerçek kimliği ve iletişim adresi yayına
-                  alınmadan önce doldurulmalıdır. Bu bilgiler tamamlanmadan burs
-                  profili toplama özelliği üretimde açılmamalıdır.
+                  Veri sorumlusunun gerçek kimliği yayına alınmadan önce
+                  doldurulmalıdır. Bu bilgi tamamlanmadan burs profili toplama
+                  özelliği üretimde açılmamalıdır.
                 </p>
               </section>
             )}
@@ -134,10 +133,7 @@ export default function ScholarshipNoticePage() {
               <p>
                 Veri sorumlusu: <strong>{controllerName}</strong>
                 <br />
-                İletişim:{" "}
-                <strong>
-                  {controllerEmail || "Yayına alınmadan önce eklenecek"}
-                </strong>
+                İletişim: <strong>{controllerEmail}</strong>
               </p>
             </section>
 
@@ -256,15 +252,9 @@ export default function ScholarshipNoticePage() {
                 sorumlusu iletişim adresi üzerinden kullanabilir.
               </p>
               <div className="doc-contact-actions">
-                {controllerEmail ? (
-                  <a className="doc-primary" href={`mailto:${controllerEmail}`}>
-                    {controllerEmail}
-                  </a>
-                ) : (
-                  <span className="doc-primary is-muted">
-                    İletişim adresi yayına alınmadan önce eklenecek
-                  </span>
-                )}
+                <a className="doc-primary" href={`mailto:${controllerEmail}`}>
+                  {controllerEmail}
+                </a>
                 <Link className="doc-ghost" href="/gizlilik">
                   Gizlilik ve veri kullanımı
                 </Link>

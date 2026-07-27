@@ -28,6 +28,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { BrandMark } from "@/components/brand";
 import {
   formatRank,
   formatScore,
@@ -236,16 +237,6 @@ function scrollToId(id: string) {
   });
 }
 
-function BrandMark() {
-  return (
-    <span className="brand-mark" aria-hidden="true">
-      <span />
-      <span />
-      <span />
-    </span>
-  );
-}
-
 function Hero() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -255,7 +246,6 @@ function Hero() {
         <a className="brand" href="#top" aria-label="Tercihçe ana sayfa">
           <BrandMark />
           <span>tercihçe</span>
-          <small>beta</small>
         </a>
         <nav className="desktop-nav" aria-label="Ana menü">
           <a href="#nasil-calisir">Nasıl çalışır?</a>
@@ -292,10 +282,6 @@ function Hero() {
       <main id="top">
         <section className="hero shell">
           <div className="hero-copy">
-            <div className="eyebrow">
-              <span className="live-dot" />
-              2026 YKS sonuçları açıklandı
-            </div>
             <h1>
               Sıralaman bir sayı.
               <br />

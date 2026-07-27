@@ -80,7 +80,7 @@ const NOT_COLLECTED = [
 ];
 
 export default function PrivacyPage() {
-  const controllerEmail = process.env.DATA_CONTROLLER_EMAIL;
+  const controllerEmail = process.env.DATA_CONTROLLER_EMAIL || "info@tercihce.com";
 
   return (
     <>
@@ -380,19 +380,10 @@ export default function PrivacyPage() {
                 bilgisi bulunmaz.
               </p>
               <div className="doc-contact-actions">
-                {controllerEmail ? (
-                  <a
-                    className="doc-primary"
-                    href={`mailto:${controllerEmail}`}
-                  >
-                    {controllerEmail}
-                    <ArrowRight size={16} aria-hidden="true" />
-                  </a>
-                ) : (
-                  <span className="doc-primary is-muted">
-                    İletişim adresi yayına alınmadan önce eklenecek
-                  </span>
-                )}
+                <a className="doc-primary" href={`mailto:${controllerEmail}`}>
+                  {controllerEmail}
+                  <ArrowRight size={16} aria-hidden="true" />
+                </a>
                 <a
                   className="doc-ghost"
                   href="https://www.kvkk.gov.tr/"

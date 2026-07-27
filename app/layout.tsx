@@ -52,7 +52,10 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ["/og.png"],
     },
     icons: {
-      icon: "/favicon.png",
+      icon: [
+        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon.png", sizes: "128x128" },
+      ],
       shortcut: "/favicon.png",
     },
   };

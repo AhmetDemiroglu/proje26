@@ -95,51 +95,11 @@ select:focus-visible {
   letter-spacing: -0.04em;
 }
 
-.brand small {
-  margin-left: -3px;
-  padding: 2px 6px;
-  border: 1px solid rgba(19, 38, 31, 0.18);
-  border-radius: 999px;
-  color: var(--ink-soft);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .brand-mark {
-  position: relative;
-  display: inline-grid;
-  width: 29px;
-  height: 29px;
+  flex: none;
+  width: 30px;
+  height: 30px;
   transform: rotate(-8deg);
-  border: 2px solid var(--ink);
-  border-radius: 9px;
-  background: var(--lime);
-  overflow: hidden;
-}
-
-.brand-mark span {
-  position: absolute;
-  width: 7px;
-  bottom: 4px;
-  border-radius: 4px 4px 2px 2px;
-  background: var(--ink);
-}
-
-.brand-mark span:nth-child(1) {
-  left: 4px;
-  height: 8px;
-}
-
-.brand-mark span:nth-child(2) {
-  left: 11px;
-  height: 14px;
-}
-
-.brand-mark span:nth-child(3) {
-  left: 18px;
-  height: 19px;
 }
 
 .desktop-nav {
@@ -216,7 +176,6 @@ select:focus-visible {
   gap: 72px;
 }
 
-.eyebrow,
 .section-kicker,
 .step-label {
   display: inline-flex;
@@ -227,23 +186,6 @@ select:focus-visible {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.eyebrow {
-  padding: 8px 12px;
-  border: 1px solid rgba(19, 38, 31, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 253, 248, 0.72);
-  letter-spacing: 0.035em;
-  text-transform: none;
-}
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #6bbd38;
-  box-shadow: 0 0 0 5px rgba(107, 189, 56, 0.14);
 }
 
 .hero h1 {
@@ -3702,18 +3644,6 @@ textarea:focus-visible {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
 }
 
-.doc-primary.is-muted {
-  background: rgba(255, 255, 255, 0.08);
-  color: #cfdad4;
-  cursor: default;
-  font-weight: 650;
-}
-
-.doc-primary.is-muted:hover {
-  transform: none;
-  box-shadow: none;
-}
-
 .doc-ghost {
   display: inline-flex;
   align-items: center;
@@ -3850,10 +3780,6 @@ textarea:focus-visible {
 }
 
 @media (max-width: 430px) {
-  .content-header .brand small {
-    display: none;
-  }
-
   .content-header .header-cta {
     padding: 0 13px;
     font-size: 12px;

@@ -1,15 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-
-function BrandMark() {
-  return (
-    <span className="brand-mark" aria-hidden="true">
-      <span />
-      <span />
-      <span />
-    </span>
-  );
-}
+import { BrandMark } from "@/components/brand";
 
 const NAV_LINKS = [
   { href: "/#nasil-calisir", label: "Nasıl çalışır?" },
@@ -24,7 +15,6 @@ export function ContentHeader({ current }: { current?: string }) {
       <Link className="brand" href="/" aria-label="Tercihçe ana sayfa">
         <BrandMark />
         <span>tercihçe</span>
-        <small>beta</small>
       </Link>
       <nav className="desktop-nav" aria-label="Ana menü">
         {NAV_LINKS.map((link) => (
