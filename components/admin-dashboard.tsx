@@ -24,7 +24,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -192,12 +192,17 @@ export function AdminDashboard() {
   const [period, setPeriod] = useState(30);
   const [scoreType, setScoreType] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const signInRef = useRef<typeof import("@/lib/firebase/client") | null>(null);
 
   useEffect(() => {
     let unsubscribe: () => void = () => undefined;
     import("@/lib/firebase/client")
-      .then(({ observeAdminUser }) => {
-        unsubscribe = observeAdminUser((currentUser) => {
+      .then((firebaseClient) => {
+        // Giriş fonksiyonlarını önden sakla. Tıklama anında await beklenirse
+        // tarayıcı kullanıcı hareketi bağlamını yitirir ve açılır pencere
+        // sessizce engellenir.
+        signInRef.current = firebaseClient;
+        unsubscribe = firebaseClient.observeAdminUser((currentUser) => {
           setUser(currentUser?.isAnonymous ? null : currentUser);
           setAuthLoading(false);
         });
@@ -296,10 +301,35 @@ export function AdminDashboard() {
 
   async function login() {
     setError("");
+    const preloaded = signInRef.current;
     try {
-      const { signInAdminWithGoogle } = await import("@/lib/firebase/client");
-      await signInAdminWithGoogle();
+      if (preloaded) {
+        // await yok: window.open tıklama bağlamı içinde çağrılır.
+        await preloaded.signInAdminWithGoogle();
+        return;
+      }
+      const firebaseClient = await import("@/lib/firebase/client");
+      await firebaseClient.signInAdminWithGoogle();
     } catch (reason) {
+      const code =
+        typeof reason === "object" && reason !== null && "code" in reason
+          ? String((reason as { code: unknown }).code)
+          : "";
+      if (
+        code === "auth/popup-blocked" ||
+        code === "auth/cancelled-popup-request" ||
+        code === "auth/operation-not-supported-in-this-environment"
+      ) {
+        try {
+          const firebaseClient =
+            preloaded ?? (await import("@/lib/firebase/client"));
+          await firebaseClient.signInAdminWithGoogleRedirect();
+          return;
+        } catch (redirectReason) {
+          setError(loginErrorMessage(redirectReason));
+          return;
+        }
+      }
       setError(loginErrorMessage(reason));
     }
   }

@@ -11,6 +11,7 @@ import {
   onAuthStateChanged,
   sendSignInLinkToEmail,
   signInWithPopup,
+  signInWithRedirect,
   signInWithEmailLink,
   signInAnonymously,
   signOut,
@@ -301,11 +302,23 @@ export async function getAnalyticsAppCheckToken() {
   }
 }
 
-export async function signInAdminWithGoogle() {
-  const { auth } = getServices();
+function adminGoogleProvider() {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
-  return (await signInWithPopup(auth, provider)).user;
+  return provider;
+}
+
+export async function signInAdminWithGoogle() {
+  const { auth } = getServices();
+  return (await signInWithPopup(auth, adminGoogleProvider())).user;
+}
+
+// Safari ve sıkı açılır pencere engelleyicileri, tıklama bağlamı dışında
+// açılan pencereyi sessizce engeller. Bu durumda aynı sekmede yönlendirme
+// akışına düşülür.
+export async function signInAdminWithGoogleRedirect() {
+  const { auth } = getServices();
+  await signInWithRedirect(auth, adminGoogleProvider());
 }
 
 export function observeAdminUser(callback: (user: User | null) => void) {
