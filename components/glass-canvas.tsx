@@ -114,7 +114,8 @@ export function GlassCanvas() {
     };
     const observer = new ResizeObserver(schedule);
     observer.observe(host);
-    schedule();
+    /* İlk harita senkron üretilir; rAF yalnızca resize gazlaması için. */
+    regenerate();
 
     return () => {
       observer.disconnect();
