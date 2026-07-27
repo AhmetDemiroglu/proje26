@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand";
+import { HeaderFx } from "@/components/header-fx";
 
 const NAV_LINKS = [
   { href: "/#nasil-calisir", label: "Nasıl çalışır?" },
@@ -12,25 +13,28 @@ const NAV_LINKS = [
 export function ContentHeader({ current }: { current?: string }) {
   return (
     <header className="site-header content-header">
-      <Link className="brand" href="/" aria-label="Tercihçe ana sayfa">
-        <BrandMark />
-        <span>tercihçe</span>
-      </Link>
-      <nav className="desktop-nav" aria-label="Ana menü">
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            aria-current={link.href === current ? "page" : undefined}
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
-      <Link className="header-cta" href="/#analiz">
-        Sonucumu değerlendir
-        <ArrowRight size={17} />
-      </Link>
+      <div className="site-header-inner">
+        <Link className="brand" href="/" aria-label="Tercihçe ana sayfa">
+          <BrandMark />
+          <span>tercihçe</span>
+        </Link>
+        <nav className="desktop-nav" aria-label="Ana menü">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={link.href === current ? "page" : undefined}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <Link className="header-cta" href="/#analiz">
+          Sonucumu değerlendir
+          <ArrowRight size={17} />
+        </Link>
+        <HeaderFx />
+      </div>
     </header>
   );
 }

@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { BrandMark } from "@/components/brand";
+import { HeaderFx } from "@/components/header-fx";
 import {
   formatRank,
   formatScore,
@@ -243,28 +244,31 @@ function Hero() {
   return (
     <>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Tercihçe ana sayfa">
-          <BrandMark />
-          <span>tercihçe</span>
-        </a>
-        <nav className="desktop-nav" aria-label="Ana menü">
-          <a href="#nasil-calisir">Nasıl çalışır?</a>
-          <a href="#veri-kaynagi">Veri kaynağı</a>
-          <a href="/destekci-basvuru">Destekçi ol</a>
-          <a href="/gizlilik">Gizlilik</a>
-        </nav>
-        <button className="header-cta" onClick={() => scrollToId("analiz")}>
-          Sonucumu değerlendir
-          <ArrowRight size={17} />
-        </button>
-        <button
-          className="mobile-menu"
-          aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü göster"}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((current) => !current)}
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="site-header-inner">
+          <a className="brand" href="#top" aria-label="Tercihçe ana sayfa">
+            <BrandMark />
+            <span>tercihçe</span>
+          </a>
+          <nav className="desktop-nav" aria-label="Ana menü">
+            <a href="#nasil-calisir">Nasıl çalışır?</a>
+            <a href="#veri-kaynagi">Veri kaynağı</a>
+            <a href="/destekci-basvuru">Destekçi ol</a>
+            <a href="/gizlilik">Gizlilik</a>
+          </nav>
+          <button className="header-cta" onClick={() => scrollToId("analiz")}>
+            Sonucumu değerlendir
+            <ArrowRight size={17} />
+          </button>
+          <button
+            className="mobile-menu"
+            aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü göster"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((current) => !current)}
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+          <HeaderFx />
+        </div>
         {mobileOpen && (
           <nav className="mobile-nav" aria-label="Mobil ana menü">
             <a href="#nasil-calisir" onClick={() => setMobileOpen(false)}>
@@ -275,6 +279,16 @@ function Hero() {
             </a>
             <a href="/destekci-basvuru">Destekçi ol</a>
             <a href="/gizlilik">Gizlilik</a>
+            <button
+              className="mobile-nav-cta"
+              onClick={() => {
+                setMobileOpen(false);
+                scrollToId("analiz");
+              }}
+            >
+              Sonucumu değerlendir
+              <ArrowRight size={17} />
+            </button>
           </nav>
         )}
       </header>
