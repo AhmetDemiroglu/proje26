@@ -69,40 +69,57 @@ void main() {
   ));
   float facing = dot(nrm, lightDir);
 
-  float rim = smoothstep(-7.0, -1.0, d);
-  float rimLight = rim * pow(max(facing, 0.0), 1.5);
-  float rimDark = rim * pow(max(-facing, 0.0), 1.3);
+  /* Cam kenar tüpü: geniş rim + gölgede kalan karşı taraf */
+  float rim = smoothstep(-9.0, -1.0, d);
+  float rimLight = rim * pow(max(facing, 0.0), 1.35);
+  float rimDark = rim * pow(max(-facing, 0.0), 1.2);
+
+  /* Kenarda keskin speküler çizgi (iOS parlak kenarı) */
+  float edgeLine = smoothstep(-2.6, -0.8, d) * pow(max(facing, 0.0), 2.0);
 
   vec2 uv = frag / u_res;
   float t = u_time;
 
-  /* Akan girişim deseni: seyrek kaustik tepeler */
-  float w = sin(uv.x * 9.0 + t * 0.8 + sin(uv.y * 7.0 - t * 0.6) * 1.6)
-          * sin(uv.y * 6.5 - t * 0.5 + sin(uv.x * 5.0 + t * 0.45) * 1.4);
-  float caustic = smoothstep(0.6, 0.98, w * 0.5 + 0.5);
+  /* Domain-warp'lu kaustikler: sıvı gibi akan ışık kırılmaları */
+  vec2 warp = vec2(
+    sin(uv.y * 6.0 + t * 0.5),
+    sin(uv.x * 5.0 - t * 0.4)
+  ) * 0.18;
+  float w = sin((uv.x + warp.x) * 10.0 + t * 0.9)
+          * sin((uv.y + warp.y) * 8.0 - t * 0.7);
+  float caustic = smoothstep(0.45, 0.95, w * 0.5 + 0.5);
 
   /* Çapraz ışık süpürmesi */
   float diag = uv.x * 0.78 + (1.0 - uv.y) * 0.32;
-  float sweepPos = fract(t * 0.055 + u_pointer.x * 0.12);
-  float band = smoothstep(0.085, 0.0, abs(diag - mix(-0.25, 1.45, sweepPos)));
+  float sweepPos = fract(t * 0.11 + u_pointer.x * 0.25);
+  float band = smoothstep(0.14, 0.0, abs(diag - mix(-0.3, 1.55, sweepPos)));
+
+  /* Üstten geçen ışığın dikey gradyanı */
+  float topGlow = pow(uv.y, 2.2) * 0.1;
 
   vec3 lime = vec3(0.79, 0.95, 0.43);
 
   vec3 col = vec3(0.0);
   float a = 0.0;
 
-  col += vec3(1.0) * (caustic * 0.085) + lime * (caustic * 0.05);
-  a += caustic * 0.075;
+  col += vec3(1.0) * topGlow;
+  a += topGlow * 0.8;
 
-  col += vec3(1.0) * (band * 0.11);
-  a += band * 0.09;
+  col += vec3(1.0) * (caustic * 0.14) + lime * (caustic * 0.1);
+  a += caustic * 0.14;
 
-  col += vec3(1.0) * (rimLight * 0.95);
-  a += rimLight * 0.8;
+  col += vec3(1.0) * (band * 0.17);
+  a += band * 0.14;
+
+  col += vec3(1.0) * (rimLight * 1.1);
+  a += rimLight * 0.95;
+
+  col += vec3(1.0) * (edgeLine * 0.9);
+  a += edgeLine * 0.8;
 
   /* Kenarın gölgede kalan tarafı: cam kalınlığı */
-  col = mix(col, vec3(0.06, 0.11, 0.09), clamp(rimDark * 0.85, 0.0, 1.0));
-  a += rimDark * 0.35;
+  col = mix(col, vec3(0.05, 0.1, 0.08), clamp(rimDark * 0.9, 0.0, 1.0));
+  a += rimDark * 0.4;
 
   /* Bantlanmayı önlemek için dither */
   col += (hash(frag) - 0.5) * 0.012;
@@ -196,9 +213,8 @@ export function GlassCanvas() {
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-      const rect = inner.getBoundingClientRect();
-      const w = Math.max(1, Math.round(rect.width * dpr));
-      const h = Math.max(1, Math.round(rect.height * dpr));
+      const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
+      const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;

@@ -74,5 +74,9 @@ export function HeaderFx() {
     };
   }, []);
 
-  return <span ref={barRef} className="scroll-progress" aria-hidden="true" />;
+  return (
+    <span className="scroll-progress-track" aria-hidden="true">
+      <span ref={barRef} className="scroll-progress" />
+    </span>
+  );
 }
