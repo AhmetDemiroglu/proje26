@@ -6,7 +6,6 @@ import {
   initializeApp,
   type App,
 } from "firebase-admin/app";
-import { getAppCheck } from "firebase-admin/app-check";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
@@ -102,6 +101,10 @@ export async function verifyOptionalAppCheck(request: Request) {
   const token = request.headers.get("x-firebase-appcheck");
   if (!token) return false;
   try {
+    // Tembel yükleme: firebase-admin/app-check, jwks-rsa üzerinden ESM olan
+    // jose paketini çeker. Üst seviye import, App Check kapalıyken bile her
+    // sunucu yolunu ERR_REQUIRE_ESM ile düşürüyordu.
+    const { getAppCheck } = await import("firebase-admin/app-check");
     await getAppCheck(getAdminApp()).verifyToken(token);
     return true;
   } catch {
