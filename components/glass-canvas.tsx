@@ -98,17 +98,17 @@ export function GlassCanvas() {
         <defs>
           <LensFilter
             id="glass-lens"
-            frequency="0.012 0.028"
-            softness={5}
-            scale={64}
-            aberration={14}
+            frequency="0.009 0.022"
+            softness={7}
+            scale={26}
+            aberration={5}
           />
           <LensFilter
             id="glass-lens-edge"
-            frequency="0.02 0.05"
-            softness={3}
-            scale={150}
-            aberration={26}
+            frequency="0.014 0.036"
+            softness={5}
+            scale={70}
+            aberration={10}
           />
         </defs>
       </svg>
