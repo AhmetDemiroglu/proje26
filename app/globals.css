@@ -581,7 +581,7 @@ select:focus-visible {
 .section-heading h2,
 .analyzer-intro h2,
 .data-copy h2,
-.content-page h1 {
+.page-hero h1 {
   margin: 14px 0 16px;
   font-size: clamp(36px, 4vw, 52px);
   font-weight: 760;
@@ -591,7 +591,8 @@ select:focus-visible {
 
 .section-heading p,
 .analyzer-intro p,
-.data-copy p {
+.data-copy p,
+.page-lede {
   margin: 0;
   color: var(--ink-soft);
   font-size: 17px;
@@ -1862,136 +1863,38 @@ select:focus-visible {
   }
 }
 
-.content-page {
-  width: min(820px, calc(100% - 48px));
-  margin: 0 auto;
-  padding: 80px 0 110px;
-}
-
-.content-page .back-link {
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 34px;
-  color: var(--ink-soft);
-  font-size: 12px;
-  font-weight: 700;
-  gap: 7px;
-}
-
-.content-page > p {
-  color: var(--ink-soft);
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.content-card {
-  margin-top: 35px;
-  padding: 30px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: var(--paper);
-}
-
-.content-card h2 {
-  margin: 0 0 12px;
-  font-size: 22px;
-  letter-spacing: -0.03em;
-}
-
-.content-card p,
-.content-card li {
-  color: var(--ink-soft);
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.content-card ul {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.content-card a {
-  color: #284f41;
-  font-weight: 750;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.draft-warning {
+/* Doğrulama gibi tek kartlık akışlar */
+.page-card .page-card-icon {
   display: grid;
-  grid-template-columns: auto 1fr;
-  border-color: #efba67;
-  background: #fff7e7;
-  color: #8b5e14;
-  gap: 13px;
-}
-
-.draft-warning h2 {
-  color: #6d4a12;
-}
-
-.draft-warning p {
-  margin: 0;
-}
-
-.verification-page {
-  display: flex;
-  flex-direction: column;
-  width: min(620px, calc(100% - 32px));
-  min-height: 100vh;
-  margin: 0 auto;
-  padding: 55px 0;
-}
-
-.verification-page .back-link {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  margin-bottom: 30px;
-  color: var(--ink-soft);
-  font-size: 12px;
-  font-weight: 700;
-  gap: 7px;
-}
-
-.verification-card {
-  padding: 40px;
-  border: 1px solid var(--line);
-  border-radius: 26px;
-  background: var(--paper);
-  box-shadow: var(--shadow);
-}
-
-.verification-icon {
-  display: grid;
-  width: 62px;
-  height: 62px;
-  margin-bottom: 23px;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 22px;
   place-items: center;
   border-radius: 18px;
   background: var(--lime);
 }
 
-.verification-card h1 {
-  margin: 11px 0 12px;
-  font-size: 39px;
-  letter-spacing: -0.055em;
-  line-height: 1.05;
+.page-card h1 {
+  margin: 12px 0 12px;
+  font-size: clamp(30px, 4vw, 39px);
+  font-weight: 760;
+  letter-spacing: -0.05em;
+  line-height: 1.06;
 }
 
-.verification-card > p {
+.page-card > p {
   margin: 0;
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.65;
 }
 
-.verification-card form {
-  margin-top: 25px;
+.page-card form {
+  margin-top: 26px;
 }
 
-.verification-card form .primary-button,
-.verification-card > .primary-button {
+.page-card form .primary-button,
+.page-card > .primary-button {
   margin-top: 18px;
 }
 
@@ -2373,12 +2276,8 @@ select:focus-visible {
     gap: 12px;
   }
 
-  .verification-card {
-    padding: 28px 21px;
-  }
-
-  .verification-card h1 {
-    font-size: 34px;
+  .page-card h1 {
+    font-size: 30px;
   }
 }
 
@@ -2410,28 +2309,6 @@ textarea {
 textarea:focus-visible {
   outline: 3px solid rgba(255, 119, 92, 0.42);
   outline-offset: 3px;
-}
-
-.donor-page {
-  width: min(780px, calc(100% - 40px));
-}
-
-.donor-heading {
-  max-width: 680px;
-}
-
-.donor-heading .scholarship-icon {
-  margin-bottom: 18px;
-}
-
-.donor-heading h1 {
-  max-width: 640px;
-  margin: 10px 0 14px;
-}
-
-.donor-heading p {
-  color: var(--ink-soft);
-  line-height: 1.7;
 }
 
 .donor-form {
@@ -2487,36 +2364,8 @@ textarea:focus-visible {
   background: #f1f8df;
 }
 
-.donor-success {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 590px;
-  margin: 80px auto;
-  padding: 46px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: var(--paper);
-  box-shadow: var(--shadow);
-}
-
-.donor-success .success-icon {
-  display: grid;
-  width: 54px;
-  height: 54px;
-  margin-bottom: 24px;
-  place-items: center;
-  border-radius: 18px;
-  background: var(--lime);
-}
-
-.donor-success h1 {
-  margin: 8px 0 10px;
-}
-
-.donor-success p {
-  margin: 0 0 28px;
-  color: var(--ink-soft);
+.page-card.is-success p {
+  margin-bottom: 28px;
 }
 
 /* Yönetim merkezi */
@@ -3321,10 +3170,6 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .donor-success {
-    padding: 30px 23px;
-  }
-
   .admin-toolbar {
     align-items: stretch;
     flex-direction: column;
@@ -3371,91 +3216,93 @@ textarea:focus-visible {
   }
 }
 
-/* ---------- Politika ve aydınlatma sayfaları ---------- */
+/* ==========================================================================
+   Ortak alt sayfa sistemi
+   Ana sayfanın dili: aynı bant arka planları, aynı başlık ölçeği, aynı kart
+   ailesi. /gizlilik, /burs-aydinlatma, /destekci-basvuru ve /burs-dogrula
+   bu sınıfları paylaşır.
+   ========================================================================== */
 
-.legal-page {
+.page-main {
   padding-bottom: 96px;
 }
 
-.legal-hero-band {
-  position: relative;
+/* --- Sayfa başlığı bandı --- */
+
+.page-hero-band {
   border-bottom: 1px solid rgba(19, 38, 31, 0.09);
   background:
-    radial-gradient(
-      118% 150% at 8% -10%,
-      rgba(201, 243, 109, 0.42) 0%,
-      rgba(245, 241, 232, 0) 58%
-    ),
-    radial-gradient(
-      70% 120% at 92% 0%,
-      rgba(134, 215, 206, 0.26) 0%,
-      rgba(245, 241, 232, 0) 62%
-    ),
+    radial-gradient(circle at 10% 15%, rgba(201, 243, 109, 0.3), transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(134, 215, 206, 0.24), transparent 32%),
     var(--cream);
-  overflow: hidden;
 }
 
-.legal-hero {
-  padding-block: 44px 60px;
+.page-hero {
+  padding-block: 40px 58px;
 }
 
-.legal-back {
+.page-hero.is-centered {
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.page-hero.is-centered .page-back {
+  margin-inline: auto;
+}
+
+.page-back {
   display: flex;
   width: fit-content;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   margin-bottom: 30px;
-  padding: 8px 14px 8px 11px;
-  border: 1px solid rgba(19, 38, 31, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 253, 248, 0.7);
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  transition:
-    color 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
+  transition: color 160ms ease;
 }
 
-.legal-back:hover {
-  transform: translateX(-2px);
-  border-color: rgba(19, 38, 31, 0.24);
+.page-back svg {
+  transition: transform 200ms ease;
+}
+
+.page-back:hover {
   color: var(--ink);
 }
 
-.legal-hero h1 {
-  max-width: 15ch;
-  margin: 16px 0 20px;
-  font-size: clamp(38px, 5.2vw, 62px);
-  font-weight: 780;
-  letter-spacing: -0.06em;
-  line-height: 1.02;
+.page-back:hover svg {
+  transform: translateX(-4px);
 }
 
-.legal-lede {
-  max-width: 62ch;
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 17px;
-  line-height: 1.65;
+.page-hero h1 {
+  margin: 15px 0 18px;
 }
 
-.legal-meta {
+.page-hero .scholarship-icon {
+  margin-bottom: 20px;
+}
+
+.page-hero.is-centered .scholarship-icon {
+  margin-inline: auto;
+}
+
+/* Künye kutuları: tarih, sürüm, kapsam */
+.page-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 32px 0 0;
+  margin: 30px 0 0;
 }
 
-.legal-meta > div {
+.page-meta > div {
   padding: 11px 18px;
   border: 1px solid rgba(19, 38, 31, 0.1);
   border-radius: 14px;
   background: rgba(255, 253, 248, 0.78);
 }
 
-.legal-meta dt {
+.page-meta dt {
   color: #6d7c76;
   font-size: 10px;
   font-weight: 800;
@@ -3463,27 +3310,88 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 
-.legal-meta dd {
+.page-meta dd {
   margin: 4px 0 0;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-.legal-layout {
+/* Ana sayfadaki trust-strip ile aynı dil */
+.page-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.page-chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid rgba(19, 38, 31, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.72);
+  color: #3f5449;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.page-chips svg {
+  color: #4e8c22;
+}
+
+/* --- Kart tabanlı sayfa gövdesi (form sayfaları) --- */
+
+.page-body {
+  padding-top: 46px;
+}
+
+.page-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 44px;
+  border: 1px solid rgba(19, 38, 31, 0.11);
+  border-radius: var(--radius-xl);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.page-card.is-narrow {
+  max-width: 620px;
+}
+
+.page-card > h2 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+}
+
+.page-card-lede {
+  margin: 0 0 28px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* --- Belge sayfaları: içindekiler + bölümler --- */
+
+.doc-layout {
   display: grid;
   grid-template-columns: 216px minmax(0, 1fr);
   align-items: start;
-  padding-top: 52px;
+  padding-top: 48px;
   gap: 58px;
 }
 
-.legal-toc {
+.doc-toc {
   position: sticky;
   top: 104px;
 }
 
-.legal-toc-title {
+.doc-toc-title {
   display: block;
   margin-bottom: 14px;
   color: #6d7c76;
@@ -3493,7 +3401,7 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 
-.legal-toc ol {
+.doc-toc ol {
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -3502,7 +3410,7 @@ textarea:focus-visible {
   list-style: none;
 }
 
-.legal-toc a {
+.doc-toc a {
   display: flex;
   gap: 10px;
   margin-left: -1px;
@@ -3517,58 +3425,67 @@ textarea:focus-visible {
     border-color 160ms ease;
 }
 
-.legal-toc a span {
+.doc-toc a span {
+  padding-top: 2px;
   color: #9aa8a2;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  padding-top: 2px;
 }
 
-.legal-toc a:hover {
+.doc-toc a:hover {
   border-left-color: var(--lime-deep);
   color: var(--ink);
 }
 
-.legal-toc a:hover span {
+.doc-toc a:hover span {
   color: var(--ink);
 }
 
-.legal-body {
+.doc-body {
   display: flex;
   flex-direction: column;
-  gap: 22px;
   min-width: 0;
+  gap: 20px;
 }
 
-.legal-section {
+/* Ana sayfadaki .step-card ile aynı kart ailesi */
+.doc-section {
   padding: 32px 34px 34px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(19, 38, 31, 0.1);
   border-radius: var(--radius-lg);
   background: var(--paper);
   box-shadow: var(--shadow-small);
   scroll-margin-top: 100px;
 }
 
-.legal-section-head {
+.doc-section-head {
   display: flex;
   align-items: center;
-  gap: 14px;
   margin-bottom: 18px;
+  gap: 14px;
 }
 
-.legal-section-icon {
+.doc-section-icon {
   display: grid;
   flex: none;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   place-items: center;
-  border-radius: 13px;
-  background: rgba(201, 243, 109, 0.5);
-  color: #274436;
+  border-radius: 15px;
+  background: var(--lime);
+  color: #16301f;
 }
 
-.legal-section-index {
+.doc-section:nth-of-type(3n + 2) .doc-section-icon {
+  background: #c9eee9;
+}
+
+.doc-section:nth-of-type(3n) .doc-section-icon {
+  background: #ffddd4;
+}
+
+.doc-section-index {
   display: block;
   color: #8b9a94;
   font-size: 10px;
@@ -3576,7 +3493,7 @@ textarea:focus-visible {
   letter-spacing: 0.12em;
 }
 
-.legal-section-head h2 {
+.doc-section-head h2 {
   margin: 2px 0 0;
   font-size: 23px;
   font-weight: 760;
@@ -3584,59 +3501,81 @@ textarea:focus-visible {
   line-height: 1.2;
 }
 
-.legal-section p {
+.doc-section p {
   margin: 0 0 14px;
   color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.72;
 }
 
-.legal-section p:last-child {
+.doc-section p:last-child {
   margin-bottom: 0;
 }
 
-.legal-note {
+.doc-section ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+  list-style: none;
+}
+
+.doc-section li {
+  display: grid;
+  grid-template-columns: 15px 1fr;
+  align-items: start;
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.doc-section li svg {
+  margin-top: 4px;
+  color: #4e8c22;
+}
+
+.doc-note {
   padding-left: 15px;
-  border-left: 2px solid rgba(201, 243, 109, 0.85);
+  border-left: 2px solid var(--lime);
   color: #6a7a73 !important;
   font-size: 13.5px !important;
 }
 
-.legal-inline-link a {
+.doc-inline-link a {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #26503f;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(19, 38, 31, 0.4);
+  color: var(--ink);
   font-size: 14px;
-  font-weight: 750;
-  text-decoration: underline;
-  text-decoration-color: rgba(38, 80, 63, 0.28);
-  text-underline-offset: 4px;
-  transition: text-decoration-color 160ms ease;
+  font-weight: 700;
 }
 
-.legal-inline-link a:hover {
-  text-decoration-color: rgba(38, 80, 63, 0.75);
+.doc-inline-link a:hover {
+  border-bottom-color: var(--ink);
 }
 
-.legal-summary {
+.doc-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
-.legal-summary-card {
+.doc-summary-card {
   padding: 20px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(19, 38, 31, 0.1);
   border-radius: var(--radius-md);
-  background: #fbfaf4;
+  background: rgba(255, 253, 248, 0.68);
 }
 
-.legal-summary-card svg {
+.doc-summary-card svg {
   color: #2f5a45;
 }
 
-.legal-summary-card strong {
+.doc-summary-card strong {
   display: block;
   margin: 11px 0 6px;
   font-size: 15px;
@@ -3644,36 +3583,36 @@ textarea:focus-visible {
   letter-spacing: -0.02em;
 }
 
-.legal-summary-card p {
+.doc-summary-card p {
   margin: 0 !important;
   font-size: 13px !important;
   line-height: 1.6 !important;
 }
 
-.legal-compare {
+.doc-compare {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-bottom: 18px;
   gap: 14px;
 }
 
-.legal-compare-col {
+.doc-compare-col {
   padding: 20px 22px 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
 
-.legal-compare-col.is-yes {
+.doc-compare-col.is-yes {
   border-color: rgba(155, 212, 61, 0.55);
   background: rgba(201, 243, 109, 0.16);
 }
 
-.legal-compare-col.is-no {
+.doc-compare-col.is-no {
   border-color: rgba(255, 119, 92, 0.32);
   background: rgba(255, 119, 92, 0.07);
 }
 
-.legal-compare-title {
+.doc-compare-title {
   display: block;
   margin-bottom: 13px;
   color: #3f5449;
@@ -3683,57 +3622,58 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 
-.legal-compare-col ul {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  gap: 10px;
-  list-style: none;
-}
-
-.legal-compare-col li {
-  display: grid;
-  grid-template-columns: 15px 1fr;
-  align-items: start;
-  gap: 10px;
-  color: var(--ink-soft);
+.doc-compare-col li {
   font-size: 13.5px;
   line-height: 1.55;
 }
 
-.legal-compare-col li svg {
+.doc-compare-col li svg {
   margin-top: 2px;
 }
 
-.legal-compare-col.is-yes li svg {
-  color: #4e8c22;
-}
-
-.legal-compare-col.is-no li svg {
+.doc-compare-col.is-no li svg {
   color: #d0533a;
 }
 
-.legal-contact {
+.doc-section.draft-warning {
+  border-color: #efba67;
+  background: #fff7e7;
+}
+
+.doc-section.draft-warning .doc-section-icon {
+  background: #f6d9a4;
+  color: #6d4a12;
+}
+
+.doc-section.draft-warning h2 {
+  color: #6d4a12;
+}
+
+.doc-section.draft-warning p {
+  color: #8b5e14;
+}
+
+/* Kapanış kartı: ana sayfadaki koyu veri bölümüyle aynı ton */
+.doc-contact {
   border-color: transparent;
   background: var(--ink);
   color: white;
 }
 
-.legal-contact .legal-section-icon {
+.doc-contact .doc-section-icon {
   background: rgba(201, 243, 109, 0.22);
   color: var(--lime);
 }
 
-.legal-contact .legal-section-index {
+.doc-contact .doc-section-index {
   color: #8ea297;
 }
 
-.legal-contact p {
+.doc-contact p {
   color: #cfdad4;
 }
 
-.legal-contact-actions {
+.doc-contact-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3741,7 +3681,7 @@ textarea:focus-visible {
   gap: 12px;
 }
 
-.legal-primary {
+.doc-primary {
   display: inline-flex;
   align-items: center;
   min-height: 46px;
@@ -3757,24 +3697,24 @@ textarea:focus-visible {
     box-shadow 160ms ease;
 }
 
-.legal-primary:hover {
+.doc-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
 }
 
-.legal-primary.is-muted {
+.doc-primary.is-muted {
   background: rgba(255, 255, 255, 0.08);
   color: #cfdad4;
-  font-weight: 650;
   cursor: default;
+  font-weight: 650;
 }
 
-.legal-primary.is-muted:hover {
+.doc-primary.is-muted:hover {
   transform: none;
   box-shadow: none;
 }
 
-.legal-ghost {
+.doc-ghost {
   display: inline-flex;
   align-items: center;
   min-height: 46px;
@@ -3790,132 +3730,106 @@ textarea:focus-visible {
     background 160ms ease;
 }
 
-.legal-ghost:hover {
+.doc-ghost:hover {
   border-color: rgba(255, 255, 255, 0.42);
   background: rgba(255, 255, 255, 0.06);
 }
 
-.legal-footnote {
-  margin: 8px 0 0;
+.doc-footnote {
+  margin: 6px 0 0;
   color: #7c8a84;
   font-size: 12px;
   line-height: 1.65;
 }
 
+/* --- Duyarlı davranış --- */
+
 @media (max-width: 980px) {
-  .legal-layout {
+  .doc-layout {
     grid-template-columns: 1fr;
-    padding-top: 34px;
-    gap: 26px;
+    padding-top: 32px;
+    gap: 24px;
   }
 
-  .legal-toc {
+  .doc-toc {
     position: static;
     padding: 20px 22px;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(19, 38, 31, 0.1);
     border-radius: var(--radius-md);
     background: var(--paper);
   }
 
-  .legal-toc ol {
+  .doc-toc ol {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border-left: 0;
     gap: 2px 18px;
   }
 
-  .legal-toc a {
+  .doc-toc a {
     margin-left: 0;
     padding: 6px 0;
     border-left: 0;
   }
 
-  .legal-toc a:hover {
+  .doc-toc a:hover {
     border-left-color: transparent;
   }
 }
 
 @media (max-width: 720px) {
-  .legal-page {
+  .page-main {
     padding-bottom: 64px;
   }
 
-  .legal-hero {
-    padding-block: 32px 44px;
+  .page-hero {
+    padding-block: 30px 42px;
   }
 
-  .legal-lede {
-    font-size: 15.5px;
-  }
-
-  .legal-meta {
+  .page-meta {
     gap: 10px;
   }
 
-  .legal-meta > div {
+  .page-meta > div {
     flex: 1 1 140px;
     padding: 10px 14px;
   }
 
-  .legal-section {
+  .page-body {
+    padding-top: 30px;
+  }
+
+  .page-card {
+    padding: 26px 22px 30px;
+    border-radius: 22px;
+  }
+
+  .doc-section {
     padding: 26px 22px 28px;
   }
 
-  .legal-section-head h2 {
+  .doc-section-head h2 {
     font-size: 20px;
   }
 
-  .legal-section p {
+  .doc-section p,
+  .doc-section li {
     font-size: 14.5px;
   }
 
-  .legal-summary,
-  .legal-compare {
+  .doc-summary,
+  .doc-compare {
     grid-template-columns: 1fr;
   }
 
-  .legal-toc ol {
+  .doc-toc ol {
     grid-template-columns: 1fr;
   }
 
-  .legal-contact-actions .legal-primary,
-  .legal-contact-actions .legal-ghost {
+  .doc-contact-actions .doc-primary,
+  .doc-contact-actions .doc-ghost {
     flex: 1 1 100%;
     justify-content: center;
-  }
-}
-
-@media print {
-  .site-header,
-  .site-footer,
-  .legal-toc,
-  .legal-back {
-    display: none !important;
-  }
-
-  .legal-hero-band {
-    background: none;
-  }
-
-  .legal-layout {
-    display: block;
-    padding-top: 0;
-  }
-
-  .legal-section {
-    margin-bottom: 16px;
-    box-shadow: none;
-    break-inside: avoid;
-  }
-
-  .legal-contact {
-    border: 1px solid var(--line);
-    background: white;
-    color: var(--ink);
-  }
-
-  .legal-contact p {
-    color: var(--ink-soft);
   }
 }
 
@@ -3929,8 +3843,8 @@ textarea:focus-visible {
     display: inline-flex;
     min-height: 40px;
     padding: 0 15px;
-    font-size: 12.5px;
     gap: 6px;
+    font-size: 12.5px;
     white-space: nowrap;
   }
 }
@@ -3943,5 +3857,39 @@ textarea:focus-visible {
   .content-header .header-cta {
     padding: 0 13px;
     font-size: 12px;
+  }
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  .doc-toc,
+  .page-back {
+    display: none !important;
+  }
+
+  .page-hero-band {
+    background: none;
+  }
+
+  .doc-layout {
+    display: block;
+    padding-top: 0;
+  }
+
+  .doc-section {
+    margin-bottom: 16px;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .doc-contact {
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--ink);
+  }
+
+  .doc-contact p {
+    color: var(--ink-soft);
   }
 }

@@ -86,10 +86,10 @@ export default function PrivacyPage() {
     <>
       <ContentHeader current="/gizlilik" />
 
-      <main className="legal-page">
-        <div className="legal-hero-band">
-          <div className="shell legal-hero">
-            <Link className="legal-back" href="/">
+      <main className="page-main">
+        <div className="page-hero-band">
+          <div className="shell page-hero">
+            <Link className="page-back" href="/">
               <ArrowLeft size={15} />
               Tercihçe’ye dön
             </Link>
@@ -98,13 +98,13 @@ export default function PrivacyPage() {
               Açık ve sade
             </span>
             <h1>Gizlilik ve veri kullanımı</h1>
-            <p className="legal-lede">
+            <p className="page-lede">
               Tercihçe, üniversite adaylarına ücretsiz rehberlik etmek için
               tasarlandı. Bu sayfa hangi verinin neden tutulduğunu, neyin hiç
               toplanmadığını ve kararın her aşamada nasıl sende kaldığını
               anlatır.
             </p>
-            <dl className="legal-meta">
+            <dl className="page-meta">
               <div>
                 <dt>Son güncelleme</dt>
                 <dd>{LAST_UPDATED}</dd>
@@ -121,9 +121,9 @@ export default function PrivacyPage() {
           </div>
         </div>
 
-        <div className="shell legal-layout">
-          <aside className="legal-toc" aria-label="Sayfa içeriği">
-            <span className="legal-toc-title">Bu sayfada</span>
+        <div className="shell doc-layout">
+          <aside className="doc-toc" aria-label="Sayfa içeriği">
+            <span className="doc-toc-title">Bu sayfada</span>
             <ol>
               {SECTIONS.map((section, index) => (
                 <li key={section.id}>
@@ -136,20 +136,20 @@ export default function PrivacyPage() {
             </ol>
           </aside>
 
-          <div className="legal-body">
-            <section className="legal-section" id="ozet">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+          <div className="doc-body">
+            <section className="doc-section" id="ozet">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <Sparkles size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">01</span>
+                  <span className="doc-section-index">01</span>
                   <h2>Kısaca</h2>
                 </div>
               </header>
-              <div className="legal-summary">
+              <div className="doc-summary">
                 {SUMMARY.map((item) => (
-                  <div className="legal-summary-card" key={item.title}>
+                  <div className="doc-summary-card" key={item.title}>
                     <item.icon size={19} aria-hidden="true" />
                     <strong>{item.title}</strong>
                     <p>{item.body}</p>
@@ -158,13 +158,13 @@ export default function PrivacyPage() {
               </div>
             </section>
 
-            <section className="legal-section" id="veriler">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="veriler">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <ScrollText size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">02</span>
+                  <span className="doc-section-index">02</span>
                   <h2>Toplanan veriler</h2>
                 </div>
               </header>
@@ -173,9 +173,9 @@ export default function PrivacyPage() {
                 aşağıdadır. Sağ sütun, hiçbir aşamada istemediğimiz bilgileri
                 gösterir.
               </p>
-              <div className="legal-compare">
-                <div className="legal-compare-col is-yes">
-                  <span className="legal-compare-title">Kaydedilebilenler</span>
+              <div className="doc-compare">
+                <div className="doc-compare-col is-yes">
+                  <span className="doc-compare-title">Kaydedilebilenler</span>
                   <ul>
                     {COLLECTED.map((item) => (
                       <li key={item}>
@@ -185,8 +185,8 @@ export default function PrivacyPage() {
                     ))}
                   </ul>
                 </div>
-                <div className="legal-compare-col is-no">
-                  <span className="legal-compare-title">
+                <div className="doc-compare-col is-no">
+                  <span className="doc-compare-title">
                     Hiç istemediklerimiz
                   </span>
                   <ul>
@@ -206,13 +206,13 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="legal-section" id="onay">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="onay">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <CheckCircle2 size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">03</span>
+                  <span className="doc-section-index">03</span>
                   <h2>Kayıt ne zaman oluşur?</h2>
                 </div>
               </header>
@@ -226,7 +226,7 @@ export default function PrivacyPage() {
                 açık rıza alınır. E-posta doğrulanmadan burs profili aktif hale
                 gelmez.
               </p>
-              <p className="legal-inline-link">
+              <p className="doc-inline-link">
                 <Link href="/burs-aydinlatma">
                   Burs ağı aydınlatma metnini oku
                   <ArrowRight size={14} aria-hidden="true" />
@@ -234,13 +234,13 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="legal-section" id="olcum">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="olcum">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <Search size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">04</span>
+                  <span className="doc-section-index">04</span>
                   <h2>Ziyaret ve kullanım ölçümü</h2>
                 </div>
               </header>
@@ -257,19 +257,19 @@ export default function PrivacyPage() {
                 açık olan tarayıcılarda ürün analitiği gönderilmez. Trafik
                 olaylarına YKS puanı veya başarı sırası eklenmez.
               </p>
-              <p className="legal-note">
+              <p className="doc-note">
                 Bilinen bot imzaları sayımdan çıkarılır, ancak bu filtre
                 kusursuz değildir; ziyaret sayıları yaklaşık değerlerdir.
               </p>
             </section>
 
-            <section className="legal-section" id="isleme">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="isleme">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <Settings size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">05</span>
+                  <span className="doc-section-index">05</span>
                   <h2>Veri nerede işlenir?</h2>
                 </div>
               </header>
@@ -282,13 +282,13 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="legal-section" id="burs">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="burs">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <Users size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">06</span>
+                  <span className="doc-section-index">06</span>
                   <h2>Burs eşleştirmesinde paylaşım</h2>
                 </div>
               </header>
@@ -297,19 +297,19 @@ export default function PrivacyPage() {
                 görür. Ad ve e-posta, öğrenci belirli bir eşleşmeyi ayrıca
                 onaylamadan destekçilerle paylaşılmaz.
               </p>
-              <p className="legal-note">
+              <p className="doc-note">
                 18 yaşından küçük adaylarda veli veya yasal temsilci katılımı
                 tamamlanmadan doğrudan iletişim kurulmaz.
               </p>
             </section>
 
-            <section className="legal-section" id="destekci">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="destekci">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <MailCheck size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">07</span>
+                  <span className="doc-section-index">07</span>
                   <h2>Destekçi başvuruları</h2>
                 </div>
               </header>
@@ -321,13 +321,13 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="legal-section" id="guvenlik">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="guvenlik">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <LockKeyhole size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">08</span>
+                  <span className="doc-section-index">08</span>
                   <h2>Güvenlik ve sınırlar</h2>
                 </div>
               </header>
@@ -338,19 +338,19 @@ export default function PrivacyPage() {
                 cihazda tutulur. Yönetim paneli, doğrulanmış Firebase hesabı ve
                 sunucu tarafındaki yönetici e-posta izin listesi ile korunur.
               </p>
-              <p className="legal-note">
+              <p className="doc-note">
                 Barındırma ve altyapı sağlayıcıları hizmet güvenliği için
                 sınırlı teknik günlükler işleyebilir.
               </p>
             </section>
 
-            <section className="legal-section" id="kaynak">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section" id="kaynak">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <Target size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">09</span>
+                  <span className="doc-section-index">09</span>
                   <h2>Veri kaynağı ve sorumluluk</h2>
                 </div>
               </header>
@@ -362,13 +362,13 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="legal-section legal-contact" id="haklar">
-              <header className="legal-section-head">
-                <span className="legal-section-icon" aria-hidden="true">
+            <section className="doc-section doc-contact" id="haklar">
+              <header className="doc-section-head">
+                <span className="doc-section-icon" aria-hidden="true">
                   <ShieldCheck size={18} />
                 </span>
                 <div>
-                  <span className="legal-section-index">10</span>
+                  <span className="doc-section-index">10</span>
                   <h2>Haklarınız ve iletişim</h2>
                 </div>
               </header>
@@ -379,22 +379,22 @@ export default function PrivacyPage() {
                 hakkın vardır. Anonim araştırma kaydında ad, e-posta veya kimlik
                 bilgisi bulunmaz.
               </p>
-              <div className="legal-contact-actions">
+              <div className="doc-contact-actions">
                 {controllerEmail ? (
                   <a
-                    className="legal-primary"
+                    className="doc-primary"
                     href={`mailto:${controllerEmail}`}
                   >
                     {controllerEmail}
                     <ArrowRight size={16} aria-hidden="true" />
                   </a>
                 ) : (
-                  <span className="legal-primary is-muted">
+                  <span className="doc-primary is-muted">
                     İletişim adresi yayına alınmadan önce eklenecek
                   </span>
                 )}
                 <a
-                  className="legal-ghost"
+                  className="doc-ghost"
                   href="https://www.kvkk.gov.tr/"
                   target="_blank"
                   rel="noreferrer"
@@ -405,7 +405,7 @@ export default function PrivacyPage() {
               </div>
             </section>
 
-            <p className="legal-footnote">
+            <p className="doc-footnote">
               Bu metin sürüm {DOCUMENT_VERSION} olarak {LAST_UPDATED} tarihinde
               güncellendi. Kapsamı etkileyen bir değişiklik olduğunda tarih ve
               sürüm burada yenilenir.

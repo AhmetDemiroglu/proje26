@@ -114,6 +114,30 @@ function formatNumber(value: unknown) {
   return Number(value ?? 0).toLocaleString("tr-TR");
 }
 
+const LOGIN_ERRORS: Record<string, string> = {
+  "auth/unauthorized-domain":
+    "Bu alan adı Firebase'de yetkili değil. Authentication > Settings > Authorized domains listesine ekleyin.",
+  "auth/operation-not-allowed":
+    "Google sağlayıcısı Firebase'de kapalı. Authentication > Sign-in method bölümünden açın.",
+  "auth/popup-blocked":
+    "Tarayıcı giriş penceresini engelledi. Açılır pencerelere izin verip tekrar deneyin.",
+  "auth/popup-closed-by-user": "Giriş penceresi kapatıldı.",
+  "auth/cancelled-popup-request": "Giriş penceresi kapatıldı.",
+  "auth/network-request-failed": "Ağ bağlantısı kurulamadı.",
+  "auth/invalid-api-key":
+    "Firebase API anahtarı geçersiz. Ortam değişkenlerini kontrol edin.",
+};
+
+function loginErrorMessage(reason: unknown) {
+  const code =
+    typeof reason === "object" && reason !== null && "code" in reason
+      ? String((reason as { code: unknown }).code)
+      : "";
+  if (code && LOGIN_ERRORS[code]) return LOGIN_ERRORS[code];
+  if (code) return `Google ile giriş tamamlanamadı. (${code})`;
+  return "Google ile giriş tamamlanamadı.";
+}
+
 function formatDate(value: unknown) {
   if (typeof value !== "string" || !value) return "Tarih yok";
   return new Intl.DateTimeFormat("tr-TR", {
@@ -275,8 +299,8 @@ export function AdminDashboard() {
     try {
       const { signInAdminWithGoogle } = await import("@/lib/firebase/client");
       await signInAdminWithGoogle();
-    } catch {
-      setError("Google ile giriş tamamlanamadı.");
+    } catch (reason) {
+      setError(loginErrorMessage(reason));
     }
   }
 
