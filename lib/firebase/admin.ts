@@ -17,7 +17,15 @@ function adminEmulatorsEnabled() {
 }
 
 function privateKey() {
-  return process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const raw = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  const unquoted =
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+      ? trimmed.slice(1, -1)
+      : trimmed;
+  return unquoted.replace(/\\n/g, "\n");
 }
 
 export function adminIsConfigured() {
