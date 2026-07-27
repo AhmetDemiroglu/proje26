@@ -6,6 +6,7 @@ import {
   connectAuthEmulator,
   EmailAuthProvider,
   getAuth,
+  getRedirectResult,
   isSignInWithEmailLink,
   linkWithCredential,
   onAuthStateChanged,
@@ -326,7 +327,12 @@ export function observeAdminUser(callback: (user: User | null) => void) {
     callback(null);
     return () => undefined;
   }
-  return onAuthStateChanged(getServices().auth, callback);
+  const { auth } = getServices();
+  // Yönlendirmeli giriş dönüşünde oturumun tamamlanması için bu çağrı
+  // gereklidir. Çağrılmazsa kullanıcı Google onayını verse bile sayfa
+  // yeniden giriş ekranını gösterir.
+  void getRedirectResult(auth).catch(() => undefined);
+  return onAuthStateChanged(auth, callback);
 }
 
 export async function getAdminIdToken() {
