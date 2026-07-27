@@ -158,10 +158,10 @@ select:focus-visible {
   .glass-base {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.42),
-      rgba(250, 247, 238, 0.26)
+      rgba(255, 255, 255, 0.28),
+      rgba(250, 247, 238, 0.16)
     );
-    backdrop-filter: blur(3px) saturate(1.6);
+    backdrop-filter: blur(1.8px) saturate(1.5);
   }
 
   /* Pürüzsüz mercek: merkez düz, bükülme kapsül kenarında (GlassCanvas'ın
@@ -177,10 +177,10 @@ select:focus-visible {
 .glass-shine {
   border-radius: inherit;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 30%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 26%),
     radial-gradient(
       140% 190% at 86% -45%,
-      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.16),
       transparent 55%
     );
   box-shadow:

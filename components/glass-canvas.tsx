@@ -19,12 +19,14 @@ import { useEffect, useRef, useState } from "react";
  * harita rAF gazlamasıyla yeniden üretilir.
  */
 
-/** Kenar bandı genişliği (CSS px) — bükülmenin eriştiği derinlik. */
-const EDGE_BAND = 26;
+/** Kenar bandı genişliği (CSS px) — bükülmenin eriştiği derinlik. Dar bant
+ * = geniş düz merkez; kapsül ~62px olduğundan bant küçük tutulur, yoksa
+ * tüm yüzey kıpırdar ve "dalgalı" görünür. */
+const EDGE_BAND = 14;
 /** Bükülmenin kenara toplanma eğrisi; büyüdükçe merkez daha düz kalır. */
-const EDGE_POWER = 2.6;
+const EDGE_POWER = 3.2;
 /** feDisplacementMap scale — rim'deki azami kayma ≈ scale/2 px. */
-const LENS_SCALE = 44;
+const LENS_SCALE = 48;
 
 function buildLensMap(width: number, height: number, radius: number) {
   const w = Math.max(2, Math.round(width));
