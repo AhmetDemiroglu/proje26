@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import {
-  AlertTriangle,
   ArrowLeft,
   Check,
   MailCheck,
@@ -42,10 +41,9 @@ const PROCESSED = [
 ];
 
 export default function ScholarshipNoticePage() {
-  const controllerName =
-    process.env.DATA_CONTROLLER_NAME || "Tercihçe proje yürütücüsü";
-  const controllerEmail = process.env.DATA_CONTROLLER_EMAIL || "info@tercihce.com";
-  const isDraft = !process.env.DATA_CONTROLLER_NAME;
+  const controllerName = process.env.DATA_CONTROLLER_NAME || "tercihce.com";
+  const controllerEmail =
+    process.env.DATA_CONTROLLER_EMAIL || "info@tercihce.com";
 
   return (
     <>
@@ -101,25 +99,6 @@ export default function ScholarshipNoticePage() {
           </aside>
 
           <div className="doc-body">
-            {isDraft && (
-              <section className="doc-section draft-warning">
-                <header className="doc-section-head">
-                  <span className="doc-section-icon" aria-hidden="true">
-                    <AlertTriangle size={18} />
-                  </span>
-                  <div>
-                    <span className="doc-section-index">TASLAK</span>
-                    <h2>Yerel geliştirme taslağı</h2>
-                  </div>
-                </header>
-                <p>
-                  Veri sorumlusunun gerçek kimliği yayına alınmadan önce
-                  doldurulmalıdır. Bu bilgi tamamlanmadan burs profili toplama
-                  özelliği üretimde açılmamalıdır.
-                </p>
-              </section>
-            )}
-
             <section className="doc-section" id="sorumlu">
               <header className="doc-section-head">
                 <span className="doc-section-icon" aria-hidden="true">
