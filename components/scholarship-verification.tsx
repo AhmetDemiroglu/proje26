@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
+import { ContentFooter, ContentHeader } from "@/components/content-chrome";
 import {
   completeScholarshipVerification,
   getPendingScholarshipEmail,
@@ -59,82 +60,90 @@ export default function ScholarshipVerification() {
   }
 
   return (
-    <main className="verification-page">
-      <Link className="back-link" href="/">
-        <ArrowLeft size={16} />
-        Tercihçe’ye dön
-      </Link>
-      <div className="verification-card">
-        <span className="verification-icon">
-          {state === "success" ? (
-            <CheckCircle2 size={31} />
-          ) : state === "error" || state === "not-configured" ? (
-            <ShieldAlert size={31} />
-          ) : (
-            <MailCheck size={31} />
-          )}
-        </span>
-        {state === "success" ? (
-          <>
-            <span className="section-kicker">Doğrulandı</span>
-            <h1>Burs profilin aktif.</h1>
-            <p>
-              Uygun ve doğrulanmış bir burs eşleşmesi olduğunda sana e-posta
-              gönderilecek. İletişim bilgin, sen ayrıca onaylamadan hiçbir
-              destekçiyle paylaşılmaz.
-            </p>
-            <Link className="primary-button" href="/">
-              Tercihçe’ye dön
-            </Link>
-          </>
-        ) : state === "not-configured" ? (
-          <>
-            <span className="section-kicker">Yerel mod</span>
-            <h1>Firebase bağlantısı bekleniyor.</h1>
-            <p>
-              Bu ekran hazır, ancak e-posta doğrulama Firebase web uygulaması
-              bağlandıktan sonra çalışacak.
-            </p>
-          </>
-        ) : (
-          <>
-            <span className="section-kicker">Burs ağı</span>
-            <h1>E-postanı doğrula.</h1>
-            <p>
-              Burs profiline yazdığın e-posta adresini doğrulamak için aşağıdaki
-              alanı kontrol et.
-            </p>
-            <form onSubmit={verify}>
-              <label className="field">
-                <span>E-posta adresin</span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="ornek@eposta.com"
-                  autoComplete="email"
-                  required
-                />
-              </label>
-              {message && <p className="form-error">{message}</p>}
-              <button
-                className="primary-button"
-                type="submit"
-                disabled={state === "loading"}
-              >
-                {state === "loading" ? (
-                  <>
-                    <LoaderCircle className="spin" size={18} />
-                    Doğrulanıyor
-                  </>
-                ) : (
-                  "E-postayı doğrula"
-                )}
-              </button>
-            </form>
-          </>
-        )}
-      </div>
-    </main>
+    <>
+      <ContentHeader />
+      <main className="page-main">
+        <div className="shell page-back-row">
+          <Link className="page-back" href="/">
+            <ArrowLeft size={15} />
+            Tercihçe’ye dön
+          </Link>
+        </div>
+        <div className="shell page-body is-tight">
+          <div className="page-card is-narrow">
+            <span className="page-card-icon">
+              {state === "success" ? (
+                <CheckCircle2 size={31} />
+              ) : state === "error" || state === "not-configured" ? (
+                <ShieldAlert size={31} />
+              ) : (
+                <MailCheck size={31} />
+              )}
+            </span>
+            {state === "success" ? (
+              <>
+                <span className="section-kicker">Doğrulandı</span>
+                <h1>Burs profilin aktif.</h1>
+                <p>
+                  Uygun ve doğrulanmış bir burs eşleşmesi olduğunda sana e-posta
+                  gönderilecek. İletişim bilgin, sen ayrıca onaylamadan hiçbir
+                  destekçiyle paylaşılmaz.
+                </p>
+                <Link className="primary-button" href="/">
+                  Tercihçe’ye dön
+                </Link>
+              </>
+            ) : state === "not-configured" ? (
+              <>
+                <span className="section-kicker">Yerel mod</span>
+                <h1>Firebase bağlantısı bekleniyor.</h1>
+                <p>
+                  Bu ekran hazır, ancak e-posta doğrulama Firebase web uygulaması
+                  bağlandıktan sonra çalışacak.
+                </p>
+              </>
+            ) : (
+              <>
+                <span className="section-kicker">Burs ağı</span>
+                <h1>E-postanı doğrula.</h1>
+                <p>
+                  Burs profiline yazdığın e-posta adresini doğrulamak için aşağıdaki
+                  alanı kontrol et.
+                </p>
+                <form onSubmit={verify}>
+                  <label className="field">
+                    <span>E-posta adresin</span>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder="ornek@eposta.com"
+                      autoComplete="email"
+                      required
+                    />
+                  </label>
+                  {message && <p className="form-error">{message}</p>}
+                  <button
+                    className="primary-button"
+                    type="submit"
+                    disabled={state === "loading"}
+                  >
+                    {state === "loading" ? (
+                      <>
+                        <LoaderCircle className="spin" size={18} />
+                        Doğrulanıyor
+                      </>
+                    ) : (
+                      "E-postayı doğrula"
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      </main>
+      <ContentFooter />
+    </>
   );
 }

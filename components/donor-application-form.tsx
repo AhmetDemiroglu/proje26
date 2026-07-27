@@ -116,7 +116,7 @@ export function DonorApplicationForm() {
               <span className="page-card-icon">
                 <Check size={28} />
               </span>
-              <h1>Sırada ne var?</h1>
+              <h2>Sırada ne var?</h2>
               <p>
                 İnceleme sonucunu e-posta ile paylaşacağız. Bu süreçte
                 öğrencilerin iletişim bilgileri paylaşılmaz; eşleşme yalnızca
@@ -147,7 +147,7 @@ export function DonorApplicationForm() {
               <HeartHandshake size={22} />
             </span>
             <span className="section-kicker">Burs ağı</span>
-            <h1>Bir öğrencinin yoluna destek ol.</h1>
+            <h1>Bir öğrencinin yoluna destek ol.</h1>
             <p className="page-lede">
               Bireysel veya kurumsal destekçi başvuruları önce doğrulanır.
               Öğrenci iletişim bilgileri, öğrencinin belirli eşleşmeye ayrıca

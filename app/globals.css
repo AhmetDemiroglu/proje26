@@ -3893,3 +3893,94 @@ textarea:focus-visible {
     color: var(--ink-soft);
   }
 }
+
+/* Tek kartlık akışlarda üst geri bağlantısı */
+.page-back-row {
+  padding-top: 34px;
+}
+
+.page-back-row .page-back {
+  margin-bottom: 0;
+}
+
+.page-body.is-tight {
+  padding-top: 24px;
+}
+
+/* Destekçi başvuru formu, ana sayfadaki analiz kartıyla aynı iskelette durur */
+.donor-form-intro {
+  padding-bottom: 4px;
+}
+
+.donor-form-intro h2 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+}
+
+.donor-form-intro p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.page-card.is-success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Kahraman metin genişlikleri: okunabilir satır uzunluğu */
+.page-hero h1 {
+  max-width: 880px;
+}
+
+.page-hero .page-lede {
+  max-width: 64ch;
+}
+
+.page-hero.is-centered h1,
+.page-hero.is-centered .page-lede {
+  max-width: none;
+}
+
+/* Analiz kartının yoğun bileşenleri, form sayfasında bir tık büyür */
+.donor-form .age-options button {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-size: 12.5px;
+}
+
+.donor-form .notice-box {
+  padding: 15px 16px;
+  border-radius: 14px;
+  gap: 11px;
+}
+
+.donor-form .notice-box p {
+  font-size: 12.5px;
+}
+
+.donor-form .consent-card small {
+  font-size: 12px;
+}
+
+.donor-form legend {
+  font-size: 12px;
+  font-weight: 750;
+  color: #3d5149;
+}
+
+.page-card.is-success h2 {
+  margin: 4px 0 10px;
+  font-size: 25px;
+  font-weight: 760;
+  letter-spacing: -0.04em;
+}
+
+.page-card.is-success .primary-button {
+  margin-top: 26px;
+}

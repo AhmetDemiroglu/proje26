@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import {
   AlertTriangle,
   ArrowLeft,
+  Check,
   MailCheck,
   ScrollText,
   ShieldCheck,
-  Sparkles,
   Target,
   UserRoundX,
   Users,
@@ -154,7 +154,7 @@ export default function ScholarshipNoticePage() {
               <ul>
                 {PROCESSED.map((item) => (
                   <li key={item}>
-                    <Sparkles size={14} aria-hidden="true" />
+                    <Check size={15} aria-hidden="true" />
                     {item}
                   </li>
                 ))}
